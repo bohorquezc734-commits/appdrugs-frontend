@@ -50,20 +50,22 @@ const PharmacistReportsTab: React.FC = () => {
 
   return (
     <div>
-      <div style={{ background: '#fff', padding: 32, borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-        <h2 style={{ fontSize: 24, fontWeight: 700, color: '#1e293b', marginBottom: 24 }}>Generación de Reportes</h2>
-        <div style={{ display: 'flex', gap: 16 }}>
+      <div className="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">Generación de Reportes</h2>
+        <div className="flex gap-4">
           <button 
             onClick={() => handleOpenReportModal('appointments')} 
-            style={{ background: '#3b82f6', color: '#fff', padding: '16px 24px', borderRadius: 12, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 16, display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 4px 12px rgba(59,130,246,0.3)' }}
+            className="flex-1 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400 px-6 py-8 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/50 font-bold text-lg transition flex flex-col items-center justify-center gap-3"
           >
-            📊 Reporte de Turnos
+            <span className="text-4xl">📊</span>
+            Reporte de Turnos
           </button>
           <button 
             onClick={() => handleOpenReportModal('inventory')} 
-            style={{ background: '#10b981', color: '#fff', padding: '16px 24px', borderRadius: 12, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 16, display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 4px 12px rgba(16,185,129,0.3)' }}
+            className="flex-1 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 px-6 py-8 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/50 font-bold text-lg transition flex flex-col items-center justify-center gap-3"
           >
-            📦 Reporte de Inventarios
+            <span className="text-4xl">📦</span>
+            Reporte de Inventarios
           </button>
         </div>
       </div>

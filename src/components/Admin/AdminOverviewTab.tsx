@@ -56,7 +56,7 @@ const AdminOverviewTab: React.FC<AdminOverviewTabProps> = ({ onNavigate }) => {
   const KpiCard = ({ title, value, color, icon, onClick, trend = "+12% este mes" }: any) => (
     <div 
       onClick={onClick}
-      className={`relative overflow-hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm transition-all duration-300 flex flex-col gap-4 z-0 ${onClick ? 'cursor-pointer hover:-translate-y-1 hover:shadow-md' : 'cursor-default'}`}
+      className={`relative overflow-hidden bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all duration-300 flex flex-col gap-4 z-0 ${onClick ? 'cursor-pointer hover:-translate-y-1 hover:shadow-md' : 'cursor-default'}`}
     >
       <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-50 to-transparent rounded-bl-full opacity-60 -z-10" />
       <div className="flex items-center gap-4">
@@ -67,8 +67,8 @@ const AdminOverviewTab: React.FC<AdminOverviewTabProps> = ({ onNavigate }) => {
           {icon}
         </div>
         <div>
-          <h3 className="m-0 text-sm font-semibold text-slate-500 mb-1">{title}</h3>
-          <p className="m-0 text-2xl font-bold text-slate-900">{value}</p>
+          <h3 className="m-0 text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">{title}</h3>
+          <p className="m-0 text-2xl font-bold text-slate-900 dark:text-white">{value}</p>
         </div>
       </div>
       <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 w-fit px-2 py-1 rounded-md mt-1">
@@ -81,8 +81,8 @@ const AdminOverviewTab: React.FC<AdminOverviewTabProps> = ({ onNavigate }) => {
   return (
     <div>
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Panel de Control Global</h2>
-        <p className="text-slate-500 m-0">Bienvenido de nuevo. Aquí tienes el resumen en tiempo real de tu red de farmacias.</p>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Panel de Control Global</h2>
+        <p className="text-slate-500 dark:text-slate-400 m-0">Bienvenido de nuevo. Aquí tienes el resumen en tiempo real de tu red de farmacias.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

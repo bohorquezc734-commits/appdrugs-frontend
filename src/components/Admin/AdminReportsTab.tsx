@@ -54,16 +54,16 @@ const AdminReportsTab: React.FC = () => {
 
   return (
     <div>
-      <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Generación de Reportes Globales</h2>
-        <p className="text-gray-500 mb-8">Exporta la información consolidada de todas las sedes en formatos Excel o PDF.</p>
+      <div className="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Generación de Reportes Globales</h2>
+        <p className="text-gray-500 dark:text-gray-400 mb-8">Exporta la información consolidada de todas las sedes en formatos Excel o PDF.</p>
         
         <div className="flex gap-4">
-          <button onClick={() => handleOpenReportModal('appointments')} className="flex-1 bg-blue-50 border border-blue-200 text-blue-700 px-6 py-8 rounded-xl hover:bg-blue-100 font-bold text-lg transition flex flex-col items-center justify-center gap-3">
+          <button onClick={() => handleOpenReportModal('appointments')} className="flex-1 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400 px-6 py-8 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/50 font-bold text-lg transition flex flex-col items-center justify-center gap-3">
             <span className="text-4xl">📊</span>
             Reporte de Turnos
           </button>
-          <button onClick={() => handleOpenReportModal('inventory')} className="flex-1 bg-green-50 border border-green-200 text-green-700 px-6 py-8 rounded-xl hover:bg-green-100 font-bold text-lg transition flex flex-col items-center justify-center gap-3">
+          <button onClick={() => handleOpenReportModal('inventory')} className="flex-1 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 px-6 py-8 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/50 font-bold text-lg transition flex flex-col items-center justify-center gap-3">
             <span className="text-4xl">📦</span>
             Reporte de Inventarios
           </button>

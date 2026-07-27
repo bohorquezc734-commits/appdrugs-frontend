@@ -56,8 +56,8 @@ const AdminAppointmentsTab: React.FC = () => {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-        <h2 className="text-2xl font-bold text-gray-800">Supervisión de Turnos</h2>
-        <button onClick={loadAppointments} className="bg-white border rounded-lg px-4 py-2 hover:bg-gray-50 transition shadow-sm font-bold text-gray-700">🔄 Actualizar</button>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Supervisión de Turnos</h2>
+        <button onClick={loadAppointments} className="bg-white dark:bg-slate-900 border rounded-lg px-4 py-2 hover:bg-gray-50 dark:bg-gray-800 transition shadow-sm font-bold text-gray-700 dark:text-gray-200">🔄 Actualizar</button>
       </div>
 
       {loadingAppointments ? <p>Cargando...</p> : (
@@ -65,11 +65,11 @@ const AdminAppointmentsTab: React.FC = () => {
           {appointments.map(apt => {
             const statusInfo = STATUS_LABELS[apt.status] || { label: apt.statusName, color: '#64748b' };
             return (
-              <div key={apt.id} className="bg-white p-5 rounded-xl shadow-sm border-l-4 transition hover:shadow-md" style={{ borderColor: statusInfo.color }}>
+              <div key={apt.id} className="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border-l-4 transition hover:shadow-md" style={{ borderColor: statusInfo.color }}>
                 <div className="flex justify-between">
                   <div>
-                    <h3 className="font-bold text-lg text-gray-800">Turno #{apt.id} - Sede: {apt.sedeName}</h3>
-                    <p className="text-sm text-gray-500">Usuario: {apt.userName} | Creado: {new Date(apt.createdAt).toLocaleDateString()}</p>
+                    <h3 className="font-bold text-lg text-gray-800 dark:text-gray-100">Turno #{apt.id} - Sede: {apt.sedeName}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Usuario: {apt.userName} | Creado: {new Date(apt.createdAt).toLocaleDateString()}</p>
                   </div>
                   <div className="text-right">
                     <span className="px-3 py-1 rounded-full text-sm font-bold text-white shadow-sm" style={{ background: statusInfo.color }}>
@@ -80,10 +80,10 @@ const AdminAppointmentsTab: React.FC = () => {
                     </button>
                   </div>
                 </div>
-                <div className="mt-4 text-sm text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                <div className="mt-4 text-sm text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-gray-100 dark:border-gray-700">
                   <strong>Medicamentos:</strong> {apt.details.map(d => `${d.drugName} (x${d.quantity})`).join(', ')}
                 </div>
-                <div className="mt-4 pt-4 border-t border-gray-100 flex justify-center">
+                <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-center">
                   <div className="w-full max-w-sm">
                     <AppointmentQrCard appointment={apt} />
                   </div>

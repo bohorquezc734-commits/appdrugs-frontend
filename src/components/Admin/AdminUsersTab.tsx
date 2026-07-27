@@ -25,7 +25,7 @@ const AdminUsersTab: React.FC = () => {
   const columns: ColumnDef<UserDto>[] = [
     {
       header: 'ID',
-      render: (u) => <span className="font-bold text-slate-400">#{u.id}</span>,
+      render: (u) => <span className="font-bold text-slate-400 dark:text-slate-500">#{u.id}</span>,
       width: '80px',
     },
     {
@@ -65,13 +65,13 @@ const AdminUsersTab: React.FC = () => {
     <div className="animate-fade-in-up">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h2 className="text-3xl font-bold text-slate-800 tracking-tight">Usuarios del Sistema</h2>
-          <p className="text-slate-500 mt-1">Gestión y control de accesos de la plataforma.</p>
+          <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Usuarios del Sistema</h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Gestión y control de accesos de la plataforma.</p>
         </div>
         
         <button 
           onClick={fetchUsers} 
-          className="px-4 py-2 bg-white border border-slate-200 text-slate-600 font-semibold rounded-xl shadow-sm hover:bg-slate-50 hover:text-emerald-600 transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold rounded-xl shadow-sm hover:bg-slate-50 dark:bg-slate-800 hover:text-emerald-600 transition-colors flex items-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
           Refrescar

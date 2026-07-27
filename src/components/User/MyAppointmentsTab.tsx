@@ -61,7 +61,7 @@ const MyAppointmentsTab: React.FC<MyAppointmentsTabProps> = ({ onCreateNewClick,
         </div>
         
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
-          <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-x-auto w-full md:w-auto hide-scrollbar">
+          <div className="flex p-1 bg-slate-100 dark:bg-slate-700 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-x-auto w-full md:w-auto hide-scrollbar">
             {[
               { id: 'ALL', label: 'Todos' },
               { id: 'PENDING', label: 'Pendientes' },
@@ -73,8 +73,8 @@ const MyAppointmentsTab: React.FC<MyAppointmentsTabProps> = ({ onCreateNewClick,
                 onClick={() => setFilter(f.id as any)}
                 className={`px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
                   filter === f.id 
-                    ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/50 dark:border-slate-600' 
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700'
+                    ? 'bg-white dark:bg-slate-900 dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200 dark:border-slate-700/50 dark:border-slate-600' 
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-200 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700'
                 }`}
               >
                 {f.label}
@@ -84,7 +84,7 @@ const MyAppointmentsTab: React.FC<MyAppointmentsTabProps> = ({ onCreateNewClick,
 
           <button 
             onClick={() => refetchAppts()} 
-            className="hidden md:flex px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold rounded-xl shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors items-center gap-2"
+            className="hidden md:flex px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold rounded-xl shadow-sm hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors items-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
             Refrescar
@@ -140,7 +140,7 @@ const MyAppointmentsTab: React.FC<MyAppointmentsTabProps> = ({ onCreateNewClick,
           return (
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               {filteredAppointments.map((apt: AppointmentDto) => {
-                const statusInfo = STATUS_LABELS[apt.status] || { label: apt.statusName, color: 'text-slate-600', bg: 'bg-slate-100', border: 'border-slate-200' };
+                const statusInfo = STATUS_LABELS[apt.status] || { label: apt.statusName, color: 'text-slate-600 dark:text-slate-300', bg: 'bg-slate-100 dark:bg-slate-700', border: 'border-slate-200 dark:border-slate-700' };
                 
                 return (
                   <div key={apt.id} className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md hover:border-emerald-100 dark:hover:border-emerald-500/50 transition-all duration-200 flex flex-col h-full relative overflow-hidden">
@@ -162,7 +162,7 @@ const MyAppointmentsTab: React.FC<MyAppointmentsTabProps> = ({ onCreateNewClick,
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-xs text-slate-400 dark:text-slate-500 font-medium uppercase tracking-wider mb-0.5">Fecha de Creación</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium uppercase tracking-wider mb-0.5">Fecha de Creación</p>
                         <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                           {new Date(apt.createdAt).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}
                         </p>
@@ -171,10 +171,10 @@ const MyAppointmentsTab: React.FC<MyAppointmentsTabProps> = ({ onCreateNewClick,
 
                     {apt.details && apt.details.length > 0 && (
                       <div className="pl-2 mt-2 mb-5">
-                        <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Medicamentos Solicitados</p>
+                        <p className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-2">Medicamentos Solicitados</p>
                         <div className="flex flex-wrap gap-2">
                           {apt.details.map((d: any) => (
-                            <span key={d.id} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold">
+                            <span key={d.id} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 dark:bg-slate-800 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold">
                               <span className="text-emerald-600 font-black">{d.quantity}x</span> {d.drugName}
                             </span>
                           ))}
