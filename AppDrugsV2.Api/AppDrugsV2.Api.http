@@ -1,6 +1,0 @@
-@AppDrugsV2.Api_HostAddress = http://localhost:5071
-
-GET {{AppDrugsV2.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
