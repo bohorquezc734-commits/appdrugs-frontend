@@ -54,27 +54,27 @@ const PharmacistAppointmentsTab: React.FC = () => {
     }
   };
 
-  if (loading) return <p style={{ color: '#64748b' }}>Cargando tablero...</p>;
+  if (loading) return <p className="text-slate-500 dark:text-slate-400">Cargando tablero...</p>;
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-        <h2 style={{ fontSize: 24, fontWeight: 700, color: '#1e293b', margin: 0 }}>Tablero de Despacho</h2>
-        <button onClick={loadAppointments} style={{ background: '#fff', border: '1px solid #cbd5e1', borderRadius: 8, padding: '8px 16px', cursor: 'pointer', fontWeight: 600 }}>
+    <div className="animate-fade-in-up">
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 m-0">Tablero de Despacho</h2>
+        <button onClick={loadAppointments} className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg px-4 py-2 cursor-pointer font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
           🔄 Actualizar
         </button>
       </div>
 
       <DragDropContext onDragEnd={onDragEnd}>
-        <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 16 }}>
+        <div className="flex gap-4 overflow-x-auto pb-4">
           {COLUMNS.map(col => {
             const colAppointments = appointments.filter(a => a.status === col.id);
             return (
-              <div key={col.id} style={{ flex: '1 1 300px', minWidth: 280, display: 'flex', flexDirection: 'column', background: '#f8fafc', borderRadius: 12, padding: 12, border: '1px solid #e2e8f0' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                  <span style={{ width: 12, height: 12, borderRadius: '50%', background: col.color }} />
-                  <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#334155' }}>{col.title}</h3>
-                  <span style={{ marginLeft: 'auto', background: col.bg, color: col.color, padding: '2px 8px', borderRadius: 12, fontSize: 12, fontWeight: 700 }}>
+              <div key={col.id} className="flex-1 min-w-[280px] flex flex-col bg-slate-50 dark:bg-slate-900 rounded-xl p-3 border border-slate-200 dark:border-slate-800">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-3 h-3 rounded-full" style={{ background: col.color }} />
+                  <h3 className="m-0 text-base font-bold text-slate-700 dark:text-slate-200">{col.title}</h3>
+                  <span className="ml-auto px-2 py-0.5 rounded-full text-xs font-bold" style={{ background: col.bg, color: col.color }}>
                     {colAppointments.length}
                   </span>
                 </div>
@@ -84,11 +84,7 @@ const PharmacistAppointmentsTab: React.FC = () => {
                     <div
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      style={{
-                        flexGrow: 1, minHeight: 150, padding: 8, borderRadius: 8,
-                        background: snapshot.isDraggingOver ? col.bg : 'transparent',
-                        transition: 'background 0.2s ease',
-                      }}
+                      className={`flex-grow min-h-[150px] p-2 rounded-lg transition-colors ${snapshot.isDraggingOver ? 'bg-slate-100 dark:bg-slate-800/50' : 'bg-transparent'}`}
                     >
                       {colAppointments.map((apt, index) => (
                         <Draggable key={apt.id} draggableId={String(apt.id)} index={index}>
@@ -97,24 +93,17 @@ const PharmacistAppointmentsTab: React.FC = () => {
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
+                              className={`select-none p-4 mb-3 rounded-xl border border-slate-200 dark:border-slate-700 transition-transform ${snapshot.isDragging ? 'bg-white dark:bg-slate-800 shadow-xl scale-105' : 'bg-white dark:bg-slate-800 shadow-sm'}`}
                               style={{
-                                userSelect: 'none',
-                                padding: 16,
-                                margin: '0 0 12px 0',
-                                background: snapshot.isDragging ? '#ffffff' : '#ffffff',
-                                borderRadius: 10,
-                                boxShadow: snapshot.isDragging ? '0 10px 25px rgba(0,0,0,0.1)' : '0 1px 3px rgba(0,0,0,0.05)',
-                                border: '1px solid #e2e8f0',
-                                transform: snapshot.isDragging ? 'scale(1.02)' : 'none',
                                 ...provided.draggableProps.style,
                               }}
                             >
-                              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                                <span style={{ fontWeight: 700, color: '#1e293b', fontSize: 14 }}>Turno #{apt.id}</span>
-                                <span style={{ fontSize: 12, color: '#64748b' }}>{new Date(apt.createdAt).toLocaleDateString()}</span>
+                              <div className="flex justify-between mb-2">
+                                <span className="font-bold text-slate-800 dark:text-slate-100 text-sm">Turno #{apt.id}</span>
+                                <span className="text-xs text-slate-500 dark:text-slate-400">{new Date(apt.createdAt).toLocaleDateString()}</span>
                               </div>
-                              <p style={{ margin: '0 0 8px', fontSize: 13, color: '#475569' }}>👤 {apt.userName}</p>
-                              <div style={{ fontSize: 12, color: '#64748b', background: '#f1f5f9', padding: 8, borderRadius: 6 }}>
+                              <p className="m-0 mb-2 text-sm text-slate-600 dark:text-slate-300">👤 {apt.userName}</p>
+                              <div className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-900/50 p-2 rounded-md">
                                 {apt.details.map(d => `${d.drugName} (x${d.quantity})`).join(', ')}
                               </div>
                             </div>

@@ -54,7 +54,7 @@ const CatalogTab: React.FC<CatalogTabProps> = ({ cart, setCart }) => {
         >
           <div className="relative w-full md:w-64">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-5 w-5 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
@@ -63,7 +63,7 @@ const CatalogTab: React.FC<CatalogTabProps> = ({ cart, setCart }) => {
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               placeholder="Buscar medicamento..."
-              className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all shadow-sm placeholder:text-slate-400 text-slate-700 dark:text-slate-100"
+              className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all shadow-sm placeholder:text-slate-400 dark:text-slate-500 text-slate-700 dark:text-slate-200"
             />
           </div>
           <button 
@@ -90,7 +90,7 @@ const CatalogTab: React.FC<CatalogTabProps> = ({ cart, setCart }) => {
 
       {/* Content */}
       {loadingDrugs ? (
-        <div className="flex flex-col items-center justify-center py-20 text-slate-500">
+        <div className="flex flex-col items-center justify-center py-20 text-slate-500 dark:text-slate-400">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 mb-4"></div>
           <p className="font-medium">Cargando catálogo...</p>
         </div>
@@ -130,18 +130,18 @@ const CatalogTab: React.FC<CatalogTabProps> = ({ cart, setCart }) => {
                 {/* Content */}
                 <h3 className="font-bold text-lg text-slate-800 dark:text-slate-100 leading-tight mb-1 group-hover:text-emerald-600 transition-colors">{drug.name}</h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">{drug.genericName}</p>
-                <p className="text-xs font-medium text-slate-400 dark:text-slate-500 mb-4 flex items-center gap-1">
+                <p className="text-xs font-medium text-slate-400 dark:text-slate-400 mb-4 flex items-center gap-1">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
                   {drug.laboratory}
                 </p>
                 
                 <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-700 flex items-end justify-between">
                   <div>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 font-medium mb-1">Precio Unitario</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-400 font-medium mb-1">Precio Unitario</p>
                     <p className="text-2xl font-black text-emerald-600 leading-none">${drug.price.toFixed(2)}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-slate-400 dark:text-slate-500 font-medium mb-1">Stock</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-400 font-medium mb-1">Stock</p>
                     <p className={`text-sm font-bold ${drug.stock > 10 ? 'text-slate-700 dark:text-slate-300' : 'text-rose-500'}`}>
                       {drug.stock} un.
                     </p>
@@ -167,7 +167,7 @@ const CatalogTab: React.FC<CatalogTabProps> = ({ cart, setCart }) => {
             <button 
               onClick={() => loadDrugs(currentPage - 1)} 
               disabled={currentPage === 1}
-              className="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+              className="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-800 hover:text-slate-900 dark:text-white dark:hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
             >
               ← Anterior
             </button>
@@ -177,7 +177,7 @@ const CatalogTab: React.FC<CatalogTabProps> = ({ cart, setCart }) => {
             <button 
               onClick={() => loadDrugs(currentPage + 1)} 
               disabled={drugs.length < pageSize}
-              className="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+              className="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-800 hover:text-slate-900 dark:text-white dark:hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
             >
               Siguiente →
             </button>

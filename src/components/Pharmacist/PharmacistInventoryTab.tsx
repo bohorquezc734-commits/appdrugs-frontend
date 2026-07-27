@@ -70,10 +70,10 @@ const PharmacistInventoryTab: React.FC = () => {
   ];
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-        <h2 style={{ fontSize: 24, fontWeight: 700, color: '#1e293b', margin: 0 }}>Gestión de Inventario</h2>
-        <div style={{ width: 250 }}>
+    <div className="animate-fade-in-up">
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 m-0">Gestión de Inventario</h2>
+        <div className="w-[250px]">
           <Select
             value={gestorOptions.find(o => o.value === invFilterSede) || gestorOptions[0]}
             onChange={(opt: any) => setInvFilterSede(opt ? opt.value : 0)}
@@ -86,44 +86,51 @@ const PharmacistInventoryTab: React.FC = () => {
                 borderColor: state.isFocused ? '#2563eb' : '#cbd5e1',
                 boxShadow: state.isFocused ? '0 0 0 1px #2563eb' : 'none',
                 fontSize: '14px',
+                backgroundColor: 'var(--select-bg, white)',
               }),
               option: (base, state) => ({
                 ...base,
                 fontSize: '14px',
-                backgroundColor: state.isSelected ? '#2563eb' : state.isFocused ? '#eff6ff' : 'white',
-                color: state.isSelected ? 'white' : '#1e293b',
+                backgroundColor: state.isSelected ? '#2563eb' : state.isFocused ? 'var(--select-hover, #eff6ff)' : 'var(--select-bg, white)',
+                color: state.isSelected ? 'white' : 'var(--select-text, #1e293b)',
+              }),
+              singleValue: (base) => ({
+                ...base,
+                color: 'var(--select-text, #1e293b)',
               })
             }}
+            className="my-react-select-container"
+            classNamePrefix="my-react-select"
           />
         </div>
       </div>
 
       {loadingInventories ? (
-        <p style={{ color: '#64748b' }}>Cargando inventario...</p>
+        <p className="text-slate-500 dark:text-slate-400">Cargando inventario...</p>
       ) : inventories.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '40px', background: '#fff', borderRadius: 12, color: '#64748b', border: '1px dashed #cbd5e1' }}>
-          <p style={{ fontSize: 16 }}>No hay medicamentos en el inventario para esta sede.</p>
+        <div className="text-center p-10 bg-white dark:bg-slate-900 rounded-xl text-slate-500 dark:text-slate-400 border border-dashed border-slate-300 dark:border-slate-700">
+          <p className="text-base">No hay medicamentos en el inventario para esta sede.</p>
         </div>
       ) : (
-        <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.05)', overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-            <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+          <table className="w-full border-collapse text-left">
+            <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
               <tr>
-                <th style={{ padding: '16px', fontWeight: 600, color: '#475569', fontSize: 14 }}>Sede</th>
-                <th style={{ padding: '16px', fontWeight: 600, color: '#475569', fontSize: 14 }}>Medicamento</th>
-                <th style={{ padding: '16px', fontWeight: 600, color: '#475569', fontSize: 14 }}>Cantidad</th>
-                <th style={{ padding: '16px', fontWeight: 600, color: '#475569', fontSize: 14 }}>Acciones de Stock</th>
+                <th className="p-4 font-semibold text-slate-600 dark:text-slate-400 text-sm">Sede</th>
+                <th className="p-4 font-semibold text-slate-600 dark:text-slate-400 text-sm">Medicamento</th>
+                <th className="p-4 font-semibold text-slate-600 dark:text-slate-400 text-sm">Cantidad</th>
+                <th className="p-4 font-semibold text-slate-600 dark:text-slate-400 text-sm">Acciones de Stock</th>
               </tr>
             </thead>
             <tbody>
               {inventories.map(inv => (
-                <tr key={inv.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '16px', fontSize: 14, color: '#1e293b' }}>{inv.sedeName}</td>
-                  <td style={{ padding: '16px', fontSize: 14, fontWeight: 600, color: '#1e293b' }}>{inv.drugName}</td>
-                  <td style={{ padding: '16px', fontSize: 15, fontWeight: 700, color: '#2563eb' }}>{inv.quantity}</td>
-                  <td style={{ padding: '16px', display: 'flex', gap: 8 }}>
-                    <button onClick={() => openStockModal('add', inv)} style={{ background:'#dcfce7', color:'#15803d', border:'none', borderRadius:6, padding:'6px 12px', fontSize:13, fontWeight:600, cursor:'pointer' }}>+ Agregar</button>
-                    <button onClick={() => openStockModal('remove', inv)} style={{ background:'#fee2e2', color:'#dc2626', border:'none', borderRadius:6, padding:'6px 12px', fontSize:13, fontWeight:600, cursor:'pointer' }}>- Retirar</button>
+                <tr key={inv.id} className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
+                  <td className="p-4 text-sm text-slate-800 dark:text-slate-200">{inv.sedeName}</td>
+                  <td className="p-4 text-sm font-semibold text-slate-800 dark:text-slate-200">{inv.drugName}</td>
+                  <td className="p-4 text-base font-bold text-blue-600 dark:text-blue-400">{inv.quantity}</td>
+                  <td className="p-4 flex gap-2">
+                    <button onClick={() => openStockModal('add', inv)} className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-none rounded-md px-3 py-1.5 text-sm font-semibold cursor-pointer hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors">+ Agregar</button>
+                    <button onClick={() => openStockModal('remove', inv)} className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-none rounded-md px-3 py-1.5 text-sm font-semibold cursor-pointer hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors">- Retirar</button>
                   </td>
                 </tr>
               ))}
@@ -145,8 +152,8 @@ const PharmacistInventoryTab: React.FC = () => {
         onCancel={() => setStockModal(s => ({ ...s, open: false }))}
       >
         <div>
-          <label style={{ display:'block', fontSize:13, fontWeight:600, color:'#374151', marginBottom:6 }}>
-            {stockModal.type === 'add' ? 'Unidades a agregar' : 'Unidades a retirar'} <span style={{ color:'#ef4444' }}>*</span>
+          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+            {stockModal.type === 'add' ? 'Unidades a agregar' : 'Unidades a retirar'} <span className="text-red-500">*</span>
           </label>
           <input
             type="number"
@@ -156,14 +163,7 @@ const PharmacistInventoryTab: React.FC = () => {
             onFocus={() => setStockFocus(true)}
             onBlur={() => setStockFocus(false)}
             autoFocus
-            style={{
-              width:'100%', padding:'10px 14px', borderRadius:10,
-              border: `1.5px solid ${stockFocus ? '#2563eb' : '#e2e8f0'}`,
-              fontSize:15, color:'#1e293b', outline:'none',
-              background: stockFocus ? '#f8fbff' : '#f9fafb',
-              boxShadow: stockFocus ? '0 0 0 3px rgba(37,99,235,0.12)' : 'none',
-              transition:'all 0.2s', boxSizing:'border-box' as any,
-            }}
+            className={`w-full p-2.5 rounded-lg text-base outline-none transition-all box-border bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 ${stockFocus ? 'border-2 border-blue-600 shadow-[0_0_0_3px_rgba(37,99,235,0.12)]' : 'border border-slate-200 dark:border-slate-700'}`}
             onKeyDown={e => e.key === 'Enter' && confirmStock()}
           />
         </div>

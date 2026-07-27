@@ -215,7 +215,7 @@ const CreateAppointmentTab: React.FC<CreateAppointmentTabProps> = ({
               {gestores.length === 0 ? (
                 <div className="flex items-center justify-center py-4">
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-500 mr-2"></div>
-                  <span className="text-slate-500 text-sm">Cargando sedes...</span>
+                  <span className="text-slate-500 dark:text-slate-400 text-sm">Cargando sedes...</span>
                 </div>
               ) : (
                 <Select
@@ -241,19 +241,19 @@ const CreateAppointmentTab: React.FC<CreateAppointmentTabProps> = ({
               <div 
                 {...getRootProps()} 
                 className={`ml-0 sm:ml-13 border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-200 ${
-                  isDragActive ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 hover:border-emerald-300 dark:hover:border-emerald-500 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  isDragActive ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 dark:bg-slate-900/50 hover:border-emerald-300 dark:hover:border-emerald-500 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800'
                 }`}
               >
                 <input {...getInputProps()} />
                 <div className="mb-3 flex justify-center">
-                  <svg className={`w-10 h-10 ${isDragActive ? 'text-emerald-500' : 'text-slate-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className={`w-10 h-10 ${isDragActive ? 'text-emerald-500' : 'text-slate-400 dark:text-slate-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                   </svg>
                 </div>
                 <p className={`font-semibold ${isDragActive ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-300'}`}>
                   {isDragActive ? "Suelta el archivo aquí..." : "Arrastra y suelta tu archivo aquí"}
                 </p>
-                <p className="text-xs text-slate-400 mt-2">o haz clic para explorar (PDF, JPG, PNG)</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">o haz clic para explorar (PDF, JPG, PNG)</p>
               </div>
 
               {archivo && (
@@ -297,7 +297,7 @@ const CreateAppointmentTab: React.FC<CreateAppointmentTabProps> = ({
               )}
 
               {/* Add item input group */}
-              <div className="flex flex-col sm:flex-row gap-2 mb-6 bg-slate-50 dark:bg-slate-900/50 p-2 rounded-2xl border border-slate-100 dark:border-slate-700">
+              <div className="flex flex-col sm:flex-row gap-2 mb-6 bg-slate-50 dark:bg-slate-800 dark:bg-slate-900/50 p-2 rounded-2xl border border-slate-100 dark:border-slate-700">
                 <div className="flex-1">
                   <Select
                     value={inventoryOptions.find(o => o.value === selectedInventory) || null}
@@ -344,7 +344,7 @@ const CreateAppointmentTab: React.FC<CreateAppointmentTabProps> = ({
                       <div className="text-4xl mb-2 opacity-50">🛒</div>
                     )}
                     <p className="text-slate-500 dark:text-slate-400 font-medium">El carrito está vacío</p>
-                    <p className="text-xs text-slate-400 mt-1">Busca medicamentos arriba para añadirlos.</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Busca medicamentos arriba para añadirlos.</p>
                   </div>
                 ) : (
                   <div className="space-y-3">

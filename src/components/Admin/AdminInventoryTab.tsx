@@ -109,13 +109,13 @@ const AdminInventoryTab: React.FC = () => {
   const columns: ColumnDef<InventoryDto>[] = [
     {
       header: 'ID',
-      render: (inv) => <span className="font-bold text-slate-400">#{inv.id}</span>,
+      render: (inv) => <span className="font-bold text-slate-400 dark:text-slate-500">#{inv.id}</span>,
       width: '60px',
     },
     {
       header: 'Sede',
       render: (inv) => (
-        <span className="flex items-center gap-2 font-medium text-slate-700">
+        <span className="flex items-center gap-2 font-medium text-slate-700 dark:text-slate-200">
           <div className="w-6 h-6 rounded-md bg-emerald-100 flex items-center justify-center text-emerald-600">
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
           </div>
@@ -125,7 +125,7 @@ const AdminInventoryTab: React.FC = () => {
     },
     {
       header: 'Medicamento',
-      render: (inv) => <span className="font-bold text-slate-800">{inv.drugName}</span>,
+      render: (inv) => <span className="font-bold text-slate-800 dark:text-slate-100">{inv.drugName}</span>,
     },
     {
       header: 'Cantidad',
@@ -169,19 +169,19 @@ const AdminInventoryTab: React.FC = () => {
     <div className="animate-fade-in-up">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h2 className="text-3xl font-bold text-slate-800 tracking-tight">Inventarios por Sede</h2>
-          <p className="text-slate-500 mt-1">Gestión de existencias de medicamentos en cada sucursal.</p>
+          <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Inventarios por Sede</h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Gestión de existencias de medicamentos en cada sucursal.</p>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
           <div className="relative">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 dark:text-slate-500">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
             </span>
             <select 
               value={invFilterSede} 
               onChange={e => setInvFilterSede(Number(e.target.value))} 
-              className="w-full sm:w-56 pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm shadow-sm font-medium text-slate-700 appearance-none"
+              className="w-full sm:w-56 pl-9 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm shadow-sm font-medium text-slate-700 dark:text-slate-200 appearance-none"
             >
               <option value={0}>Todas las sedes</option>
               {gestores.map(g => <option key={g.id} value={g.id}>{g.nombreSede}</option>)}
@@ -211,24 +211,24 @@ const AdminInventoryTab: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setShowCreateInvModal(false)}></div>
           
-          <div className="relative bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden animate-fade-in-up">
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-              <h3 className="font-bold text-xl text-slate-800 flex items-center gap-2">
+          <div className="relative bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md shadow-2xl overflow-hidden animate-fade-in-up">
+            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+              <h3 className="font-bold text-xl text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <span className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">📦</span>
                 Registrar Inventario
               </h3>
-              <button onClick={() => setShowCreateInvModal(false)} className="text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full p-2 transition">
+              <button onClick={() => setShowCreateInvModal(false)} className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:bg-slate-700 rounded-full p-2 transition">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
             
             <form onSubmit={handleCreateInventory} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5">Sede Farmacéutica</label>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">Sede Farmacéutica</label>
                 <select 
                   value={invForm.gestorFarmaceuticoId} 
                   onChange={e => setInvForm({...invForm, gestorFarmaceuticoId: Number(e.target.value)})} 
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 p-3 text-sm font-medium"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 p-3 text-sm font-medium"
                   required
                 >
                   <option value={0}>-- Selecciona Sede --</option>
@@ -237,11 +237,11 @@ const AdminInventoryTab: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5">Medicamento</label>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">Medicamento</label>
                 <select 
                   value={invForm.drugId} 
                   onChange={e => setInvForm({...invForm, drugId: Number(e.target.value)})} 
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 p-3 text-sm font-medium"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 p-3 text-sm font-medium"
                   required
                 >
                   <option value={0}>-- Selecciona Medicamento --</option>
@@ -250,19 +250,19 @@ const AdminInventoryTab: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5">Cantidad Inicial</label>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">Cantidad Inicial</label>
                 <input 
                   type="number" 
                   value={invForm.quantity} 
                   onChange={e => setInvForm({...invForm, quantity: Number(e.target.value)})} 
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 p-3 text-sm font-bold text-blue-700" 
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 p-3 text-sm font-bold text-blue-700" 
                   required 
                   min={0} 
                 />
               </div>
 
               <div className="pt-4 flex gap-3">
-                <button type="button" onClick={() => setShowCreateInvModal(false)} className="flex-1 px-4 py-3 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-50 transition-colors">
+                <button type="button" onClick={() => setShowCreateInvModal(false)} className="flex-1 px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-50 dark:bg-slate-800 transition-colors">
                   Cancelar
                 </button>
                 <button type="submit" className="flex-1 px-4 py-3 bg-emerald-600 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/30 hover:bg-emerald-700 transition-colors">
@@ -287,7 +287,7 @@ const AdminInventoryTab: React.FC = () => {
         onCancel={() => setStockModal(s => ({ ...s, open: false }))}
       >
         <div className="mt-4">
-          <label className="block text-sm font-bold text-slate-700 mb-2">
+          <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">
             {stockModal.type === 'add' ? 'Unidades a agregar' : 'Unidades a retirar'} <span className="text-rose-500">*</span>
           </label>
           <input
@@ -295,7 +295,7 @@ const AdminInventoryTab: React.FC = () => {
             min={1}
             value={stockQty}
             onChange={e => setStockQty(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 p-3 text-lg font-bold text-slate-800 text-center"
+            className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 p-3 text-lg font-bold text-slate-800 dark:text-slate-100 text-center"
             onKeyDown={e => e.key === 'Enter' && confirmStock()}
             autoFocus
           />

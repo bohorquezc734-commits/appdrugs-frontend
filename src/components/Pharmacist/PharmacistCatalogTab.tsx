@@ -27,20 +27,21 @@ const PharmacistCatalogTab: React.FC = () => {
   }, [loadDrugs]);
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-        <h2 style={{ fontSize: 24, fontWeight: 700, color: '#1e293b', margin: 0 }}>Catálogo (Solo Lectura)</h2>
-        <div style={{ display: 'flex', gap: 8 }}>
+    <div className="animate-fade-in-up">
+      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-8 gap-4">
+        <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Catálogo (Solo Lectura)</h2>
+        <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
           <input 
             type="text" 
             value={searchTerm} 
             onChange={e => setSearchTerm(e.target.value)} 
             placeholder="Buscar medicamento..." 
-            style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 8, outline: 'none', fontSize: 14 }}
+            className="w-full sm:w-64 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-shadow shadow-sm text-slate-700 dark:text-slate-200"
+            onKeyDown={e => e.key === 'Enter' && loadDrugs(1)}
           />
           <button 
             onClick={() => loadDrugs(1)} 
-            style={{ background: '#2563eb', color: 'white', padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14 }}
+            className="px-5 py-2 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-sm flex items-center gap-2 justify-center"
           >
             🔍 Buscar
           </button>
@@ -48,40 +49,40 @@ const PharmacistCatalogTab: React.FC = () => {
       </div>
 
       {loadingDrugs ? (
-        <p style={{ color: '#64748b' }}>Cargando catálogo...</p>
+        <p className="text-slate-500 dark:text-slate-400">Cargando catálogo...</p>
       ) : (
         <>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 16 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {drugs.map(drug => (
-              <div key={drug.id} style={{ background: '#fff', padding: 20, borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }}>
-                <h3 style={{ margin: '0 0 4px', fontSize: 18, color: '#1e293b' }}>{drug.name}</h3>
-                <p style={{ margin: '0 0 12px', fontSize: 13, color: '#64748b' }}>{drug.genericName} - {drug.laboratory}</p>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12, borderTop: '1px solid #f1f5f9', paddingTop: 12 }}>
+              <div key={drug.id} className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 dark:border-slate-800 hover:shadow-md transition-shadow">
+                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-1">{drug.name}</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">{drug.genericName} - {drug.laboratory}</p>
+                <div className="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 dark:border-slate-700 dark:border-slate-800">
                   <div>
-                    <p style={{ margin: 0, fontSize: 12, color: '#94a3b8' }}>Precio</p>
-                    <p style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#10b981' }}>${drug.price.toFixed(2)}</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">Precio</p>
+                    <p className="text-base font-bold text-emerald-600 dark:text-emerald-400">${drug.price.toFixed(2)}</p>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <p style={{ margin: 0, fontSize: 12, color: '#94a3b8' }}>Stock Global</p>
-                    <p style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#3b82f6' }}>{drug.stock}</p>
+                  <div className="text-right">
+                    <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">Stock Global</p>
+                    <p className="text-base font-bold text-blue-600 dark:text-blue-400">{drug.stock}</p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
           
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 24 }}>
+          <div className="flex justify-center gap-3 mt-8">
             <button 
               onClick={() => loadDrugs(drugCurrentPage - 1)} 
               disabled={drugCurrentPage === 1} 
-              style={{ padding: '8px 16px', background: drugCurrentPage === 1 ? '#f1f5f9' : '#fff', border: '1px solid #cbd5e1', borderRadius: 8, cursor: drugCurrentPage === 1 ? 'not-allowed' : 'pointer' }}
+              className="px-5 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold rounded-xl hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Anterior
             </button>
             <button 
               onClick={() => loadDrugs(drugCurrentPage + 1)} 
               disabled={drugs.length < pageSize} 
-              style={{ padding: '8px 16px', background: drugs.length < pageSize ? '#f1f5f9' : '#fff', border: '1px solid #cbd5e1', borderRadius: 8, cursor: drugs.length < pageSize ? 'not-allowed' : 'pointer' }}
+              className="px-5 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold rounded-xl hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Siguiente
             </button>
