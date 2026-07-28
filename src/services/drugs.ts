@@ -37,6 +37,14 @@ export interface UpdateDrugRequest {
   expirationDate: string;
 }
 
+export interface PagedResult<T> {
+  items: T[];
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+}
+
 export const drugsService = {
   // Obtener todos los medicamentos
   getAll: async (params?: { 
@@ -45,8 +53,18 @@ export const drugsService = {
     requiresPrescription?: boolean;
     page?: number;
     pageSize?: number;
-  }) => {
-    const response = await api.get<Drug[]>('/Drugs', { params });
+  }): Promise<PagedResult<Drug>> => {
+    const response = await api.get<PagedResult<Drug>>('/Drugs', { params });
+    // Si el backend aún devolviera un array, lo emulamos como PagedResult para evitar fallos
+    if (Array.isArray(response.data)) {
+      return {
+        items: response.data,
+        totalCount: response.data.length,
+        pageNumber: 1,
+        pageSize: response.data.length,
+        totalPages: 1
+      };
+    }
     return response.data;
   },
 

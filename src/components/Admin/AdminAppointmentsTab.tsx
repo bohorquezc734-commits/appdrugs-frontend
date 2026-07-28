@@ -26,7 +26,7 @@ const AdminAppointmentsTab: React.FC = () => {
     try {
       setLoadingAppointments(true);
       const data = await appointmentsService.getAll();
-      setAppointments(data);
+      setAppointments(data.items);
     } catch { toast.error('Error cargando turnos'); }
     finally { setLoadingAppointments(false); }
   }, []);
@@ -83,6 +83,22 @@ const AdminAppointmentsTab: React.FC = () => {
                 <div className="mt-4 text-sm text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-gray-100 dark:border-gray-700">
                   <strong>Medicamentos:</strong> {apt.details.map(d => `${d.drugName} (x${d.quantity})`).join(', ')}
                 </div>
+                {apt.archivoNombre && (
+                  <div className="mt-2">
+                    <button
+                      onClick={async () => {
+                        try {
+                          await appointmentsService.downloadFile(apt.id, apt.archivoNombre!);
+                        } catch (err: any) {
+                          toast.error(err.message);
+                        }
+                      }}
+                      className="px-3 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 rounded-lg text-sm font-bold hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors flex items-center gap-2 cursor-pointer"
+                    >
+                      📄 Descargar Receta Médica
+                    </button>
+                  </div>
+                )}
                 <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-center">
                   <div className="w-full max-w-sm">
                     <AppointmentQrCard appointment={apt} />

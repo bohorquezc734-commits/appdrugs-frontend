@@ -5,14 +5,16 @@ import PharmacistCatalogTab from '../components/Pharmacist/PharmacistCatalogTab'
 import PharmacistInventoryTab from '../components/Pharmacist/PharmacistInventoryTab';
 import PharmacistAppointmentsTab from '../components/Pharmacist/PharmacistAppointmentsTab';
 import PharmacistReportsTab from '../components/Pharmacist/PharmacistReportsTab';
+import Configuracion from '../components/Profile/Configuracion';
 
-type TabType = 'medicamentos' | 'inventarios' | 'turnos' | 'reportes';
+type TabType = 'medicamentos' | 'inventarios' | 'turnos' | 'reportes' | 'configuracion';
 
 const SECTION_LABELS: Record<TabType, string> = {
   medicamentos: 'Catálogo de Medicamentos (Solo Lectura)',
   inventarios: 'Gestión de Inventarios (Sede)',
   turnos: 'Despacho de Turnos',
   reportes: 'Reportes y Estadísticas',
+  configuracion: 'Configuración de Perfil',
 };
 
 const PharmacistDashboard: React.FC = () => {
@@ -30,6 +32,7 @@ const PharmacistDashboard: React.FC = () => {
         {activeTab === 'inventarios' && <PharmacistInventoryTab />}
         {activeTab === 'turnos' && <PharmacistAppointmentsTab />}
         {activeTab === 'reportes' && <PharmacistReportsTab />}
+        {activeTab === 'configuracion' && <Configuracion />}
       </div>
     </MainLayout>
   );

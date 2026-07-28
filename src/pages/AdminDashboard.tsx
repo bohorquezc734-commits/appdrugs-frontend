@@ -11,8 +11,9 @@ import AdminInventoryTab from '../components/Admin/AdminInventoryTab';
 import AdminAppointmentsTab from '../components/Admin/AdminAppointmentsTab';
 import AdminReportsTab from '../components/Admin/AdminReportsTab';
 import AdminAuditTab from '../components/Admin/AdminAuditTab';
+import Configuracion from '../components/Profile/Configuracion';
 
-type TabType = 'overview' | 'usuarios' | 'medicamentos' | 'sedes' | 'inventarios' | 'turnos' | 'reportes' | 'auditoria';
+type TabType = 'overview' | 'usuarios' | 'medicamentos' | 'sedes' | 'inventarios' | 'turnos' | 'reportes' | 'auditoria' | 'configuracion';
 
 const SECTION_LABELS: Record<TabType, string> = {
   overview: 'Resumen y Estadísticas',
@@ -23,6 +24,7 @@ const SECTION_LABELS: Record<TabType, string> = {
   turnos: 'Supervisión de Turnos',
   reportes: 'Generación de Reportes Globales',
   auditoria: 'Logs de Auditoría y Seguridad',
+  configuracion: 'Configuración de Perfil',
 };
 
 const AdminDashboard: React.FC = () => {
@@ -44,6 +46,7 @@ const AdminDashboard: React.FC = () => {
         {activeTab === 'turnos' && <AdminAppointmentsTab />}
         {activeTab === 'reportes' && <AdminReportsTab />}
         {activeTab === 'auditoria' && <AdminAuditTab />}
+        {activeTab === 'configuracion' && <Configuracion />}
       </div>
     </MainLayout>
   );

@@ -28,7 +28,7 @@ const AdminInventoryTab: React.FC = () => {
     try {
       const [gest, drg] = await Promise.all([gestoresService.getAll(), drugsService.getAll({ pageSize: 1000 })]);
       setGestores(gest);
-      setDrugs(drg);
+      setDrugs(drg.items);
     } catch { 
       toast.error('Error cargando dependencias'); 
     }

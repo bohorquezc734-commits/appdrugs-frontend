@@ -14,6 +14,10 @@ interface PremiumTableProps<T> {
   loading?: boolean;
   emptyMessage?: string;
   onRowClick?: (item: T) => void;
+  // Paginación Opcional
+  currentPage?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
 }
 
 export function PremiumTable<T>({ 
@@ -22,7 +26,10 @@ export function PremiumTable<T>({
   keyExtractor, 
   loading, 
   emptyMessage = 'No se encontraron registros',
-  onRowClick
+  onRowClick,
+  currentPage,
+  totalPages,
+  onPageChange
 }: PremiumTableProps<T>) {
   return (
     <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden animate-fade-in-up">
@@ -76,6 +83,31 @@ export function PremiumTable<T>({
           </tbody>
         </table>
       </div>
+
+      {/* Controles de Paginación */}
+      {totalPages !== undefined && currentPage !== undefined && totalPages > 1 && (
+        <div className="bg-slate-50 dark:bg-slate-800/80 border-t border-slate-100 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+            Página <span className="font-bold text-slate-700 dark:text-slate-200">{currentPage}</span> de <span className="font-bold text-slate-700 dark:text-slate-200">{totalPages}</span>
+          </p>
+          <div className="flex gap-2">
+            <button 
+              onClick={() => onPageChange && onPageChange(currentPage - 1)}
+              disabled={currentPage <= 1 || loading}
+              className="px-4 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            >
+              Anterior
+            </button>
+            <button 
+              onClick={() => onPageChange && onPageChange(currentPage + 1)}
+              disabled={currentPage >= totalPages || loading}
+              className="px-4 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

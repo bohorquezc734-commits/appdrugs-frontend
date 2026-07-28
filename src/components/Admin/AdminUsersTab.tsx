@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usersService, UserDto } from '../../services/users';
+import { toast } from 'react-toastify';
 import { PremiumTable, ColumnDef } from '../Common/PremiumTable';
 
 const AdminUsersTab: React.FC = () => {
@@ -22,6 +23,26 @@ const AdminUsersTab: React.FC = () => {
     fetchUsers();
   }, []);
 
+  const handleRoleChange = async (userId: number, newRole: string) => {
+    try {
+      await usersService.changeRole(userId, newRole);
+      setUsers(users.map(u => u.id === userId ? { ...u, role: newRole } : u));
+      toast.success('Rol actualizado correctamente');
+    } catch (err) {
+      toast.error('Error al actualizar el rol');
+    }
+  };
+
+  const handleStatusToggle = async (userId: number, currentStatus: boolean) => {
+    try {
+      await usersService.toggleStatus(userId, !currentStatus);
+      setUsers(users.map(u => u.id === userId ? { ...u, isActive: !currentStatus } : u));
+      toast.success('Estado actualizado correctamente');
+    } catch (err) {
+      toast.error('Error al actualizar el estado');
+    }
+  };
+
   const columns: ColumnDef<UserDto>[] = [
     {
       header: 'ID',
@@ -39,21 +60,32 @@ const AdminUsersTab: React.FC = () => {
     {
       header: 'Rol',
       render: (u) => (
-        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
-          u.role === 'Admin' ? 'bg-rose-50 text-rose-600 border-rose-200' :
-          u.role === 'Gestor' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
-          'bg-blue-50 text-blue-600 border-blue-200'
-        }`}>
-          {u.role}
-        </span>
+        <select
+          value={u.role}
+          onChange={(e) => handleRoleChange(u.id, e.target.value)}
+          className={`px-3 py-1 rounded-full text-xs font-bold border focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-colors cursor-pointer ${
+            u.role === 'Admin' ? 'bg-rose-50 text-rose-600 border-rose-200' :
+            u.role === 'Gestor' || u.role === 'Pharmacist' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
+            'bg-blue-50 text-blue-600 border-blue-200'
+          }`}
+        >
+          <option value="User">Usuario</option>
+          <option value="Pharmacist">Farmacéutico (Gestor)</option>
+          <option value="Admin">Administrador</option>
+        </select>
       ),
     },
     {
       header: 'Estado',
       render: (u) => (
         <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${u.isActive ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
-          <span className={`font-semibold text-sm ${u.isActive ? 'text-emerald-700' : 'text-rose-700'}`}>
+          <button 
+            onClick={() => handleStatusToggle(u.id, u.isActive)}
+            className={`w-10 h-5 flex items-center bg-slate-200 dark:bg-slate-700 rounded-full p-1 cursor-pointer transition-colors duration-300 ${u.isActive ? 'bg-emerald-500 dark:bg-emerald-500' : ''}`}
+          >
+            <div className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${u.isActive ? 'translate-x-5' : ''}`}></div>
+          </button>
+          <span className={`font-semibold text-sm ${u.isActive ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400'}`}>
             {u.isActive ? 'Activo' : 'Inactivo'}
           </span>
         </div>

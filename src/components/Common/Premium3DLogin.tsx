@@ -104,6 +104,17 @@ const Premium3DLogin: React.FC = () => {
             {loading ? 'Ingresando...' : 'Ingresar al Sistema'}
           </button>
         </form>
+
+        <div className="mt-8 pt-6 border-t border-white/10 text-center text-sm font-medium">
+          <span className="text-slate-300">¿Aún no tienes cuenta? </span>
+          <button 
+            type="button" 
+            onClick={() => navigate('/register')}
+            className="text-emerald-400 font-bold hover:text-emerald-300 hover:underline transition-all"
+          >
+            Regístrate aquí
+          </button>
+        </div>
       </div>
     </div>
   );
