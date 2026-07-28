@@ -23,8 +23,23 @@ export const gestoresService = {
     return response.data;
   },
 
+  getById: async (id: number) => {
+    const response = await api.get<GestorDto>(`/Gestores/${id}`);
+    return response.data;
+  },
+
   create: async (data: CreateGestorRequest) => {
     const response = await api.post('/Gestores', data);
+    return response.data;
+  },
+
+  update: async (id: number, data: CreateGestorRequest) => {
+    const response = await api.put(`/Gestores/${id}`, data);
+    return response.data;
+  },
+
+  delete: async (id: number) => {
+    const response = await api.delete(`/Gestores/${id}`);
     return response.data;
   },
 };

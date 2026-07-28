@@ -6,7 +6,7 @@ export const useMyAppointments = () => {
     queryKey: ['my-appointments'],
     queryFn: async () => {
       const data = await appointmentsService.getMyAppointments();
-      return data;
+      return data.items;
     },
   });
 };

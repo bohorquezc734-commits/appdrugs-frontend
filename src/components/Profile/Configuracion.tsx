@@ -78,98 +78,68 @@ const Configuracion: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: 800, margin: '0 auto' }}>
-      <h2 style={{ fontSize: 24, fontWeight: 800, color: '#1e293b', marginBottom: 24 }}>{APP_CONSTANTS.UI.PROFILE_SETTINGS_TITLE}</h2>
+    <div className="max-w-4xl mx-auto">
+      <h2 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 mb-6">
+        {APP_CONSTANTS.UI.PROFILE_SETTINGS_TITLE}
+      </h2>
 
-      <div style={{
-        background: '#fff',
-        borderRadius: 16,
-        padding: 32,
-        boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
-        marginBottom: 24,
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginBottom: 32 }}>
-          <div style={{
-            width: 80, height: 80,
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #2563eb, #7c3aed)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff', fontWeight: 700, fontSize: 32,
-            boxShadow: '0 8px 16px rgba(37,99,235,0.2)'
-          }}>
+      {/* Profile Card */}
+      <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm mb-6 border border-slate-100 dark:border-slate-700">
+        <div className="flex items-center gap-6 mb-8">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold text-3xl shadow-lg shadow-blue-500/20 shrink-0">
             {user?.fullName ? user.fullName[0].toUpperCase() : 'U'}
           </div>
           <div>
-            <h3 style={{ fontSize: 22, fontWeight: 700, color: '#1e293b', margin: 0 }}>
+            <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 m-0">
               {user?.fullName || APP_CONSTANTS.UI.NAME_NOT_AVAILABLE}
             </h3>
-            <p style={{ fontSize: 14, color: '#64748b', marginTop: 4 }}>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
               {user?.email || APP_CONSTANTS.UI.EMAIL_NOT_AVAILABLE}
             </p>
-            <span style={{
-              display: 'inline-block',
-              marginTop: 10,
-              padding: '4px 12px',
-              background: '#eff6ff',
-              color: '#2563eb',
-              borderRadius: 20,
-              fontSize: 12,
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px'
-            }}>
+            <span className="inline-block mt-3 px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-xs font-bold uppercase tracking-wide">
               {getRoleName(user?.role || '')}
             </span>
           </div>
         </div>
 
-        <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: 32 }}>
-          <h4 style={{ fontSize: 16, fontWeight: 700, color: '#334155', marginBottom: 20 }}>{APP_CONSTANTS.UI.ACCOUNT_INFO}</h4>
+        <div className="border-t border-slate-100 dark:border-slate-700 pt-8">
+          <h4 className="text-base font-bold text-slate-700 dark:text-slate-200 mb-5">
+            {APP_CONSTANTS.UI.ACCOUNT_INFO}
+          </h4>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#64748b', marginBottom: 8 }}>
+              <label className="block text-sm font-semibold text-slate-500 dark:text-slate-400 mb-2">
                 {APP_CONSTANTS.UI.FULL_NAME}
               </label>
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                style={{
-                  width: '100%', padding: '12px 14px', borderRadius: 10, border: '1.5px solid #cbd5e1',
-                  background: '#fff', color: '#1e293b', fontSize: 14, outline: 'none', transition: 'border-color 0.2s'
-                }}
-                onFocus={(e) => e.target.style.borderColor = '#2563eb'}
-                onBlur={(e) => e.target.style.borderColor = '#cbd5e1'}
+                className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm outline-none transition-colors focus:border-blue-600 dark:focus:border-blue-500"
               />
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#64748b', marginBottom: 8 }}>
+              <label className="block text-sm font-semibold text-slate-500 dark:text-slate-400 mb-2">
                 {APP_CONSTANTS.UI.EMAIL_READONLY}
               </label>
               <input
                 type="email"
                 value={user?.email || ''}
                 readOnly
-                style={{
-                  width: '100%', padding: '12px 14px', borderRadius: 10, border: '1.5px solid #e2e8f0',
-                  background: '#f8fafc', color: '#94a3b8', fontSize: 14, outline: 'none', cursor: 'not-allowed'
-                }}
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 text-sm outline-none cursor-not-allowed"
               />
             </div>
           </div>
-          <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end' }}>
+          <div className="mt-6 flex justify-end">
             <button
               onClick={handleUpdateProfile}
               disabled={updatingProfile || fullName === user?.fullName}
-              style={{
-                padding: '10px 20px', 
-                background: (updatingProfile || fullName === user?.fullName) ? '#cbd5e1' : '#2563eb', 
-                color: '#fff',
-                border: 'none', borderRadius: 10, fontWeight: 600, fontSize: 14,
-                cursor: (updatingProfile || fullName === user?.fullName) ? 'not-allowed' : 'pointer', 
-                transition: 'background 0.2s'
-              }}
+              className={`px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors ${
+                updatingProfile || fullName === user?.fullName
+                  ? 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 cursor-not-allowed'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
+              }`}
             >
               {updatingProfile ? APP_CONSTANTS.UI.SAVING : APP_CONSTANTS.UI.SAVE_CHANGES}
             </button>
@@ -177,23 +147,17 @@ const Configuracion: React.FC = () => {
         </div>
       </div>
 
-      <div style={{
-        background: '#fff',
-        borderRadius: 16,
-        padding: 32,
-        boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
-      }}>
-        <h4 style={{ fontSize: 16, fontWeight: 700, color: '#334155', marginBottom: 8 }}>{APP_CONSTANTS.UI.SECURITY}</h4>
-        <p style={{ fontSize: 14, color: '#64748b', marginBottom: 20 }}>
+      {/* Security Card */}
+      <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-100 dark:border-slate-700">
+        <h4 className="text-base font-bold text-slate-700 dark:text-slate-200 mb-2">
+          {APP_CONSTANTS.UI.SECURITY}
+        </h4>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">
           {APP_CONSTANTS.UI.SECURITY_DESC}
         </p>
         <button
           onClick={() => setShowPasswordModal(true)}
-          style={{
-            padding: '12px 24px', background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
-            color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 14,
-            cursor: 'pointer', boxShadow: '0 4px 12px rgba(37,99,235,0.3)', transition: 'transform 0.2s'
-          }}
+          className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-500/30 transition-transform hover:-translate-y-0.5 cursor-pointer"
         >
           {APP_CONSTANTS.UI.CHANGE_PASSWORD_BTN}
         </button>
@@ -201,83 +165,69 @@ const Configuracion: React.FC = () => {
 
       {/* Password Modal */}
       {showPasswordModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(4px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999
-        }}>
-          <div style={{
-            background: '#fff', borderRadius: 16, padding: 32, width: '100%', maxWidth: 400,
-            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
-          }}>
-            <h3 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: '0 0 8px 0' }}>{APP_CONSTANTS.UI.CHANGE_PASSWORD_TITLE}</h3>
-            <p style={{ fontSize: 14, color: '#64748b', margin: '0 0 24px 0' }}>{APP_CONSTANTS.UI.CHANGE_PASSWORD_DESC}</p>
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 w-full max-w-md shadow-2xl">
+            <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">
+              {APP_CONSTANTS.UI.CHANGE_PASSWORD_TITLE}
+            </h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
+              {APP_CONSTANTS.UI.CHANGE_PASSWORD_DESC}
+            </p>
             
             <form onSubmit={handleChangePassword}>
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 8 }}>
+              <div className="mb-4">
+                <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2">
                   {APP_CONSTANTS.UI.CURRENT_PASSWORD}
                 </label>
                 <input
                   type="password"
                   value={currentPassword}
                   onChange={e => setCurrentPassword(e.target.value)}
-                  style={{
-                    width: '100%', padding: '10px 14px', borderRadius: 8, border: '1px solid #cbd5e1',
-                    fontSize: 14, outline: 'none'
-                  }}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm outline-none focus:border-blue-500"
                   required
                 />
               </div>
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 8 }}>
+              <div className="mb-4">
+                <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2">
                   {APP_CONSTANTS.UI.NEW_PASSWORD}
                 </label>
                 <input
                   type="password"
                   value={newPassword}
                   onChange={e => setNewPassword(e.target.value)}
-                  style={{
-                    width: '100%', padding: '10px 14px', borderRadius: 8, border: '1px solid #cbd5e1',
-                    fontSize: 14, outline: 'none'
-                  }}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm outline-none focus:border-blue-500"
                   required
                 />
               </div>
-              <div style={{ marginBottom: 24 }}>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 8 }}>
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2">
                   {APP_CONSTANTS.UI.CONFIRM_NEW_PASSWORD}
                 </label>
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={e => setConfirmPassword(e.target.value)}
-                  style={{
-                    width: '100%', padding: '10px 14px', borderRadius: 8, border: '1px solid #cbd5e1',
-                    fontSize: 14, outline: 'none'
-                  }}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm outline-none focus:border-blue-500"
                   required
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+              <div className="flex gap-3 justify-end">
                 <button
                   type="button"
                   onClick={() => setShowPasswordModal(false)}
-                  style={{
-                    padding: '10px 16px', background: '#f1f5f9', color: '#475569',
-                    border: 'none', borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: 'pointer'
-                  }}
+                  className="px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 rounded-xl font-semibold text-sm transition-colors cursor-pointer"
                 >
                   {APP_CONSTANTS.UI.CANCEL}
                 </button>
                 <button
                   type="submit"
                   disabled={updatingPassword}
-                  style={{
-                    padding: '10px 16px', background: updatingPassword ? '#93c5fd' : '#2563eb', color: '#fff',
-                    border: 'none', borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: updatingPassword ? 'not-allowed' : 'pointer'
-                  }}
+                  className={`px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors ${
+                    updatingPassword
+                      ? 'bg-blue-400 dark:bg-blue-800 text-white cursor-not-allowed'
+                      : 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
+                  }`}
                 >
                   {updatingPassword ? APP_CONSTANTS.UI.SAVING : APP_CONSTANTS.UI.UPDATE}
                 </button>

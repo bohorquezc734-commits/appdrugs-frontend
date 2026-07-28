@@ -1,4 +1,5 @@
 import api from './api';
+import { PagedResult } from './drugs';
 
 export interface AppointmentDetailDto {
   id: number;
@@ -35,14 +36,26 @@ export interface CreateAppointmentDetailRequest {
 
 export const appointmentsService = {
   // Obtener mis turnos (usuario autenticado)
-  getMyAppointments: async (): Promise<AppointmentDto[]> => {
-    const response = await api.get<AppointmentDto[]>('/Appointments/mis-turnos');
+  getMyAppointments: async (): Promise<PagedResult<AppointmentDto>> => {
+    const response = await api.get<any>('/Appointments/mis-turnos');
+    if (Array.isArray(response.data)) {
+      return { items: response.data, totalCount: response.data.length, pageNumber: 1, pageSize: response.data.length, totalPages: 1 };
+    }
     return response.data;
   },
 
   // Obtener todos los turnos (Admin/Pharmacist)
-  getAll: async (): Promise<AppointmentDto[]> => {
-    const response = await api.get<AppointmentDto[]>('/Appointments');
+  getAll: async (): Promise<PagedResult<AppointmentDto>> => {
+    const response = await api.get<any>('/Appointments');
+    if (Array.isArray(response.data)) {
+      return { items: response.data, totalCount: response.data.length, pageNumber: 1, pageSize: response.data.length, totalPages: 1 };
+    }
+    return response.data;
+  },
+
+  // Obtener un turno específico por ID
+  getById: async (id: number): Promise<AppointmentDto> => {
+    const response = await api.get<AppointmentDto>(`/Appointments/${id}`);
     return response.data;
   },
 
@@ -90,6 +103,22 @@ export const appointmentsService = {
       `/Appointments/${appointmentId}/qr`
     );
     return response.data.qrBase64;
+  },
+
+  // Descargar la receta médica adjunta al turno
+  downloadFile: async (id: number, fileName: string) => {
+    try {
+      const response = await api.get(`/Appointments/${id}/archivo`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err: any) {
+      throw new Error("El archivo no pudo ser descargado. Es posible que esté corrupto o haya sido eliminado.");
+    }
   },
 };
 

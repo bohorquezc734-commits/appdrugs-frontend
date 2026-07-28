@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { appointmentsService, AppointmentDto } from '../../services/appointments';
 import { useDrugiStore } from '../../store/useDrugiStore';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import QrScannerModal from './QrScannerModal';
 
 const COLUMNS = [
   { id: 1, title: 'Recibido', color: '#3b82f6', bg: '#eff6ff' },
@@ -14,13 +15,14 @@ const COLUMNS = [
 const PharmacistAppointmentsTab: React.FC = () => {
   const [appointments, setAppointments] = useState<AppointmentDto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showScanner, setShowScanner] = useState(false);
   const { showMessage } = useDrugiStore();
 
   const loadAppointments = useCallback(async () => {
     try {
       setLoading(true);
       const data = await appointmentsService.getAll();
-      setAppointments(data);
+      setAppointments(data.items);
     } catch { toast.error('Error cargando turnos'); }
     finally { setLoading(false); }
   }, []);
@@ -28,6 +30,25 @@ const PharmacistAppointmentsTab: React.FC = () => {
   useEffect(() => {
     loadAppointments();
   }, [loadAppointments]);
+
+  const handleScanSuccess = async (decodedText: string) => {
+    setShowScanner(false);
+    const aptId = Number(decodedText);
+    
+    if (isNaN(aptId)) {
+      toast.error('El código QR escaneado no es válido para este sistema.');
+      return;
+    }
+
+    try {
+      await appointmentsService.updateStatus(aptId, 3); // Estado 3 = Entregado
+      toast.success(`Turno #${aptId} escaneado y marcado como Entregado 🎉`);
+      showMessage(`¡QR Detectado! Has entregado el turno #${aptId} de forma automática.`, 'feliz');
+      loadAppointments();
+    } catch (err: any) {
+      toast.error('Error al procesar el QR. Verifica que el turno pertenezca a esta sede.');
+    }
+  };
 
   const onDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
@@ -60,9 +81,14 @@ const PharmacistAppointmentsTab: React.FC = () => {
     <div className="animate-fade-in-up">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 m-0">Tablero de Despacho</h2>
-        <button onClick={loadAppointments} className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg px-4 py-2 cursor-pointer font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-          🔄 Actualizar
-        </button>
+        <div className="flex gap-3">
+          <button onClick={() => setShowScanner(true)} className="bg-blue-600 border border-blue-700 text-white rounded-lg px-4 py-2 cursor-pointer font-bold hover:bg-blue-700 hover:shadow-lg transition-all shadow-md shadow-blue-500/20 flex items-center gap-2">
+            📸 Escanear QR
+          </button>
+          <button onClick={loadAppointments} className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg px-4 py-2 cursor-pointer font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            🔄 Actualizar
+          </button>
+        </div>
       </div>
 
       <DragDropContext onDragEnd={onDragEnd}>
@@ -106,6 +132,20 @@ const PharmacistAppointmentsTab: React.FC = () => {
                               <div className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-900/50 p-2 rounded-md">
                                 {apt.details.map(d => `${d.drugName} (x${d.quantity})`).join(', ')}
                               </div>
+                              {apt.archivoNombre && (
+                                <button
+                                  onClick={async () => {
+                                    try {
+                                      await appointmentsService.downloadFile(apt.id, apt.archivoNombre!);
+                                    } catch (err: any) {
+                                      toast.error(err.message);
+                                    }
+                                  }}
+                                  className="mt-3 w-full px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 rounded-lg text-xs font-bold hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                                >
+                                  📄 Ver Receta
+                                </button>
+                              )}
                             </div>
                           )}
                         </Draggable>
@@ -119,6 +159,14 @@ const PharmacistAppointmentsTab: React.FC = () => {
           })}
         </div>
       </DragDropContext>
+
+      {/* Modal del Escáner */}
+      {showScanner && (
+        <QrScannerModal 
+          onClose={() => setShowScanner(false)} 
+          onScanSuccess={handleScanSuccess} 
+        />
+      )}
     </div>
   );
 };

@@ -38,8 +38,8 @@ const AdminOverviewTab: React.FC<AdminOverviewTabProps> = ({ onNavigate }) => {
         setStats({
           users: usersRes.length,
           sedes: sedesRes.length,
-          drugs: drugsRes.length,
-          appointments: aptsRes.length,
+          drugs: drugsRes.totalCount || drugsRes.items?.length || 0,
+          appointments: aptsRes.totalCount || aptsRes.items?.length || 0,
           lowStock: lowStockCount
         });
       } catch (err) {

@@ -7,14 +7,16 @@ const PharmacistCatalogTab: React.FC = () => {
   const [loadingDrugs, setLoadingDrugs] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [drugCurrentPage, setDrugCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const pageSize = 10;
 
   const loadDrugs = useCallback(async (page = 1) => {
     try {
       setLoadingDrugs(true);
       const data = await drugsService.getAll({ searchTerm: searchTerm || undefined, page, pageSize });
-      setDrugs(data);
-      setDrugCurrentPage(page);
+      setDrugs(data.items);
+      setDrugCurrentPage(data.pageNumber);
+      setTotalPages(data.totalPages);
     } catch {
       toast.error('Error cargando medicamentos');
     } finally {
@@ -79,9 +81,12 @@ const PharmacistCatalogTab: React.FC = () => {
             >
               Anterior
             </button>
+            <span className="px-4 py-2 font-bold text-slate-700 dark:text-slate-200">
+              Página {drugCurrentPage} de {totalPages}
+            </span>
             <button 
               onClick={() => loadDrugs(drugCurrentPage + 1)} 
-              disabled={drugs.length < pageSize} 
+              disabled={drugCurrentPage >= totalPages} 
               className="px-5 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold rounded-xl hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Siguiente

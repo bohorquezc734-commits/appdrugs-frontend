@@ -4,11 +4,12 @@ import { appointmentsService } from '../services/appointments';
 import { authService } from '../services/auth';
 
 // Mapa de sinónimos para detectar intención del usuario
-const DRUG_KEYWORDS = ['stock', 'medicamento', 'paracetamol', 'ibuprofeno', 'ciprofloxacino', 'naproxeno', 'tramadol', 'cetirizina', 'enalapril', 'domperidona', 'atorvastatina', 'levotiroxina', 'cuan', 'disponible', 'hay', 'queda', 'precio', 'costo', 'receta', 'prescripción', 'requiere'];
-const APPOINTMENT_KEYWORDS = ['turno', 'turnos', 'cita', 'citas', 'solicitar', 'crear', 'agendar', 'pendiente', 'estado', 'mis turnos', 'historial', 'entrega'];
-const INVENTORY_KEYWORDS = ['inventario', 'sede', 'sedes', 'stock bajo', 'agotado', 'reponer'];
+const DRUG_KEYWORDS = ['stock', 'medicamento', 'paracetamol', 'ibuprofeno', 'ciprofloxacino', 'naproxeno', 'tramadol', 'cetirizina', 'enalapril', 'domperidona', 'atorvastatina', 'levotiroxina', 'cuan', 'disponible', 'hay', 'queda', 'precio', 'costo', '1', 'uno'];
+const APPOINTMENT_KEYWORDS = ['turno', 'turnos', 'cita', 'citas', 'solicitar', 'crear', 'agendar', 'pendiente', 'estado', 'mis turnos', 'historial', 'entrega', '2', 'dos'];
+const INVENTORY_KEYWORDS = ['inventario', 'sede', 'sedes', 'stock bajo', 'agotado', 'reponer', '3', 'tres'];
+const RECETA_KEYWORDS = ['receta', 'prescripción', 'requiere', '4', 'cuatro'];
 const HELLO_KEYWORDS = ['hola', 'holi', 'buenas', 'buen día', 'buenos dias', 'hi', 'hey', 'saludos'];
-const HELP_KEYWORDS = ['ayuda', 'qué puedes', 'que puedes', 'funciones', 'opciones', 'para qué sirves', 'para que sirves', 'cómo me ayudas'];
+const HELP_KEYWORDS = ['ayuda', 'qué puedes', 'que puedes', 'funciones', 'opciones', 'para qué sirves', 'para que sirves', 'cómo me ayudas', 'menu'];
 
 function normalize(text: string): string {
   return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -16,7 +17,9 @@ function normalize(text: string): string {
 
 function containsAny(text: string, keywords: string[]): boolean {
   const norm = normalize(text);
-  return keywords.some(kw => norm.includes(normalize(kw)));
+  // Hacemos split para ver si la palabra exacta "1" o "2" coincide
+  const words = norm.split(' ');
+  return keywords.some(kw => norm.includes(normalize(kw)) || words.includes(kw));
 }
 
 function extractDrugName(text: string): string | null {
@@ -37,26 +40,44 @@ function extractDrugName(text: string): string | null {
 export async function getDrugiResponse(userMessage: string): Promise<string> {
   const user = authService.getUser();
   const userName = user?.name?.split(' ')[0] || 'Usuario';
+  const normMessage = normalize(userMessage).trim();
 
   try {
-    // Saludo
-    if (containsAny(userMessage, HELLO_KEYWORDS)) {
-      return `¡Hola ${userName}! 👋 Soy **Drugi**, tu asistente farmacéutico.\n\nPuedo ayudarte con:\n💊 Stock de medicamentos\n📋 Estado de tus turnos\n🏥 Información de sedes\n❓ Consultas sobre recetas\n\n¿Qué necesitas hoy?`;
+    // Saludo o menú
+    if (containsAny(userMessage, HELLO_KEYWORDS) || containsAny(userMessage, HELP_KEYWORDS)) {
+      return `¡Hola ${userName}! 👋 Soy **Drugi**, tu asistente farmacéutico.\n\nPuedo ayudarte con las siguientes opciones, escríbeme el número o tu pregunta:\n1️⃣ Stock y precios de medicamentos\n2️⃣ Estado de tus turnos\n3️⃣ Información de inventario/sedes\n4️⃣ Consultas sobre recetas\n\n¿Qué necesitas hoy?`;
     }
 
-    // Ayuda
-    if (containsAny(userMessage, HELP_KEYWORDS)) {
-      return `Puedo ayudarte con lo siguiente:\n\n💊 **Medicamentos**: pregúntame el stock o precio de cualquier medicamento\n📋 **Turnos**: consulta el estado de tus pedidos\n🏥 **Inventario**: sedes con stock disponible\n\nEjemplos:\n• "¿Cuál es el stock de Paracetamol?"\n• "¿El Ciprofloxacino requiere receta?"\n• "¿Cuántos turnos tengo pendientes?"`;
+    // Opcion 4 o RECETAS
+    if (containsAny(userMessage, RECETA_KEYWORDS)) {
+      const drugName = extractDrugName(userMessage);
+      if (normMessage === '4' || normMessage === 'cuatro') {
+         return `Para revisar si un medicamento necesita receta, dime el nombre. Por ejemplo: *"¿El Paracetamol requiere receta?"* o simplemente escribe *"receta ibuprofeno"*.`;
+      }
+
+      const drugsData = await drugsService.getAll(drugName ? { searchTerm: drugName } : {});
+      const drugs = drugsData.items;
+      if (drugs.length === 0) {
+        return `🔍 No encontré medicamentos${drugName ? ` para "${drugName}"` : ''} en el catálogo.\n\nIntenta con un nombre diferente o revisa el catálogo completo.`;
+      }
+
+      const drug = drugs[0];
+      if (drug.requiresPrescription) {
+        return `📋 Sí, **${drug.name}** **requiere receta médica** para su dispensación.\n\nAsegúrate de adjuntar la autorización médica al crear tu turno.`;
+      } else {
+        return `✅ **${drug.name}** **no requiere receta médica**.\n\nPuedes solicitarlo directamente creando un turno en tu sede más cercana.`;
+      }
     }
 
-    // Consultas de TURNOS
+    // Opcion 2 o TURNOS
     if (containsAny(userMessage, APPOINTMENT_KEYWORDS)) {
       const role = user?.role;
       const isAdminOrPharmacist = role === 'Admin' || role === 'Pharmacist';
       
-      const appointments = isAdminOrPharmacist 
+      const appointmentsData = isAdminOrPharmacist 
         ? await appointmentsService.getAll()
         : await appointmentsService.getMyAppointments();
+      const appointments = appointmentsData.items;
 
       if (appointments.length === 0) {
         return `📋 No tienes turnos registrados aún, ${userName}.\n\nPuedes crear uno desde la sección **"Crear Turno"** del menú principal.`;
@@ -76,33 +97,28 @@ export async function getDrugiResponse(userMessage: string): Promise<string> {
       }
     }
 
-    // Consultas de INVENTARIO / STOCK BAJO
+    // Opcion 3 o INVENTARIO
     if (containsAny(userMessage, INVENTORY_KEYWORDS)) {
       const inventory = await inventoriesService.getAll({ onlyLowStock: true });
       if (inventory.length === 0) {
         return `✅ ¡Excelente! No hay medicamentos con stock bajo en este momento.\n\nTodo el inventario está bien abastecido.`;
       }
       const list = inventory.slice(0, 5).map(i => `• ${i.drugName} (${i.sedeName}): **${i.quantity} unidades**`).join('\n');
-      return `⚠️ **Medicamentos con Stock Bajo:**\n\n${list}${inventory.length > 5 ? `\n\n...y ${inventory.length - 5} más.` : ''}`;
+      return `⚠️ **Sedes con Stock Bajo:**\n\n${list}${inventory.length > 5 ? `\n\n...y ${inventory.length - 5} más.` : ''}`;
     }
 
-    // Consultas de MEDICAMENTOS / STOCK ESPECÍFICO
+    // Opcion 1 o MEDICAMENTOS
     if (containsAny(userMessage, DRUG_KEYWORDS)) {
+      if (normMessage === '1' || normMessage === 'uno') {
+          return `💊 Para consultar el stock, escribe el nombre del medicamento que buscas. Por ejemplo: *"Stock de Paracetamol"*, o pregúntame por su precio: *"Precio de Ibuprofeno"*.`;
+      }
+
       const drugName = extractDrugName(userMessage);
-      const drugs = await drugsService.getAll(drugName ? { searchTerm: drugName } : {});
+      const drugsData = await drugsService.getAll(drugName ? { searchTerm: drugName } : {});
+      const drugs = drugsData.items;
 
       if (drugs.length === 0) {
         return `🔍 No encontré medicamentos${drugName ? ` para "${drugName}"` : ''} en el catálogo.\n\nIntenta con un nombre diferente o revisa el catálogo completo.`;
-      }
-
-      // Pregunta sobre receta
-      if (containsAny(userMessage, ['receta', 'prescripcion', 'requiere'])) {
-        const drug = drugs[0];
-        if (drug.requiresPrescription) {
-          return `📋 Sí, **${drug.name}** **requiere receta médica** para su dispensación.\n\nAsegúrate de adjuntar la autorización médica al crear tu turno.`;
-        } else {
-          return `✅ **${drug.name}** **no requiere receta médica**.\n\nPuedes solicitarlo directamente creando un turno en tu sede más cercana.`;
-        }
       }
 
       // Pregunta sobre precio
@@ -125,8 +141,8 @@ export async function getDrugiResponse(userMessage: string): Promise<string> {
       return `💊 **Medicamentos encontrados (${drugs.length}):**\n\n${list}${drugs.length > 4 ? `\n\n...y ${drugs.length - 4} más.` : ''}`;
     }
 
-    // Respuesta por defecto
-    return `Hola ${userName}! 😊 Puedo ayudarte con:\n\n• 💊 Stock y precios de medicamentos\n• 📋 Consultar tus turnos\n• ⚠️ Verificar si un medicamento requiere receta\n\nIntenta preguntar: *"¿Cuánto stock tiene el Paracetamol?"*`;
+    // Respuesta por defecto si no entendió
+    return `Lo siento ${userName}, no he logrado entenderte. 😕\n\nPuedes escribir el número de la opción que necesitas:\n1️⃣ Stock y precios de medicamentos\n2️⃣ Estado de tus turnos\n3️⃣ Información de inventario/sedes\n4️⃣ Consultas sobre recetas\n\nO puedes intentar escribiendo *"ayuda"*.`;
 
   } catch (err) {
     console.error('[Drugi] Error al consultar la API:', err);

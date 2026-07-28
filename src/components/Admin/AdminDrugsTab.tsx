@@ -23,6 +23,7 @@ const AdminDrugsTab: React.FC = () => {
   const [showDrugModal, setShowDrugModal] = useState(false);
   const [editingDrugId, setEditingDrugId] = useState<number | null>(null);
   const [drugCurrentPage, setDrugCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const pageSize = 10;
 
   const { showMessage } = useDrugiStore();
@@ -38,8 +39,9 @@ const AdminDrugsTab: React.FC = () => {
     try {
       setLoadingDrugs(true);
       const data = await drugsService.getAll({ searchTerm: searchTerm || undefined, page, pageSize });
-      setDrugs(data);
-      setDrugCurrentPage(page);
+      setDrugs(data.items);
+      setDrugCurrentPage(data.pageNumber);
+      setTotalPages(data.totalPages);
     } catch {
       toast.error('Error cargando medicamentos');
     } finally {
@@ -197,24 +199,10 @@ const AdminDrugsTab: React.FC = () => {
         loading={loadingDrugs}
         keyExtractor={(d) => d.id}
         emptyMessage="No se encontraron medicamentos."
+        currentPage={drugCurrentPage}
+        totalPages={totalPages}
+        onPageChange={loadDrugs}
       />
-      
-      <div className="flex justify-center gap-3 mt-6">
-        <button 
-          onClick={() => loadDrugs(drugCurrentPage - 1)} 
-          disabled={drugCurrentPage === 1} 
-          className="px-5 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold rounded-xl hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          Anterior
-        </button>
-        <button 
-          onClick={() => loadDrugs(drugCurrentPage + 1)} 
-          disabled={drugs.length < pageSize} 
-          className="px-5 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold rounded-xl hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          Siguiente
-        </button>
-      </div>
 
       {/* Modal */}
       {showDrugModal && (

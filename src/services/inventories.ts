@@ -30,6 +30,11 @@ export const inventoriesService = {
     return response.data;
   },
 
+  getById: async (id: number) => {
+    const response = await api.get<InventoryDto>(`/Inventories/${id}`);
+    return response.data;
+  },
+
   create: async (data: CreateInventoryRequest) => {
     const response = await api.post('/Inventories', data);
     return response.data;
