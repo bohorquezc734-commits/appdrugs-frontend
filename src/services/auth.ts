@@ -19,6 +19,8 @@ export interface LoginResponse {
   role: string;
   token: string;
   expiresAt: string;
+  refreshToken: string;
+  refreshTokenExpiresAt: string;
 }
 
 export const authService = {
@@ -39,6 +41,8 @@ export const authService = {
       console.error('Logout error:', error);
     }
     localStorage.removeItem(APP_CONSTANTS.STORAGE_KEYS.USER);
+    localStorage.removeItem(APP_CONSTANTS.STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(APP_CONSTANTS.STORAGE_KEYS.REFRESH_TOKEN);
     window.location.href = '/login';
   },
 
