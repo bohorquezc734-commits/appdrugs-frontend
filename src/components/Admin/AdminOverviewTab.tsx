@@ -5,7 +5,7 @@ import { gestoresService } from '../../services/gestores';
 import { drugsService } from '../../services/drugs';
 import { appointmentsService } from '../../services/appointments';
 import { inventoriesService } from '../../services/inventories';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface AdminOverviewTabProps {
   onNavigate?: (tab: string) => void;

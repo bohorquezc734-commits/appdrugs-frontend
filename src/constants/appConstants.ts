@@ -12,6 +12,7 @@ export const APP_CONSTANTS = {
   STORAGE_KEYS: {
     TOKEN: 'token',
     USER: 'user',
+    REFRESH_TOKEN: 'refreshToken',
   },
   MESSAGES: {
     PROFILE_NAME_EMPTY: 'El nombre no puede estar vacío',
