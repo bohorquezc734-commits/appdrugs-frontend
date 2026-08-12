@@ -18,6 +18,7 @@ const Premium3DLogin: React.FC = () => {
       const response = await authService.login({ email, password });
       localStorage.setItem(APP_CONSTANTS.STORAGE_KEYS.USER, JSON.stringify(response));
       localStorage.setItem(APP_CONSTANTS.STORAGE_KEYS.TOKEN, response.token);
+      localStorage.setItem(APP_CONSTANTS.STORAGE_KEYS.REFRESH_TOKEN, response.refreshToken);
       toast.success('¡Inicio de sesión exitoso!');
       setTimeout(() => navigate('/dashboard'), 300);
     } catch (err: any) {

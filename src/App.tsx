@@ -10,6 +10,7 @@ import { DrugiAssistant } from './components/Drugi/DrugiAssistant';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import SkeletonLoader from './components/Common/SkeletonLoader';
+import { ValidarTurno } from './pages/ValidarTurno';
 
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const UserDashboard = lazy(() => import('./pages/UserDashboard'));
@@ -48,11 +49,11 @@ const RoleBasedDashboard: React.FC = () => {
   }
 };
 
-// 🤖 Asistente: oculto solo en login y registro
+// 🤖 Asistente: oculto solo en login, registro y validación pública
 const DrugiWrapper: React.FC = () => {
   const { pathname } = useLocation();
   const authRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
-  if (authRoutes.includes(pathname)) return null;
+  if (authRoutes.includes(pathname) || pathname.startsWith('/validar-turno')) return null;
   return <DrugiAssistant />;
 };
 
@@ -66,6 +67,10 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          
+          {/* ✅ Ruta Pública de Validación QR */}
+          <Route path="/validar-turno/:id" element={<ValidarTurno />} />
+          
           
           {/* 🔐 Rutas protegidas con Lazy Loading */}
           <Route path="/dashboard" element={
