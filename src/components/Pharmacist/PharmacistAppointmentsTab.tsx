@@ -33,10 +33,28 @@ const PharmacistAppointmentsTab: React.FC = () => {
 
   const handleScanSuccess = async (decodedText: string) => {
     setShowScanner(false);
-    const aptId = Number(decodedText);
     
-    if (isNaN(aptId)) {
-      toast.error('El código QR escaneado no es válido para este sistema.');
+    let aptId = NaN;
+
+    // 1. Extraer ID si el código es nuestra nueva URL dinámica
+    if (decodedText.includes('/validar-turno/')) {
+      const urlParts = decodedText.split('/');
+      aptId = Number(urlParts[urlParts.length - 1]);
+    }
+    // 2. Extraer ID si el código es el formato antiguo (APPDRUGS|TURNO:X)
+    else if (decodedText.includes('APPDRUGS|TURNO:')) {
+      const match = decodedText.match(/TURNO:(\d+)/);
+      if (match) {
+        aptId = Number(match[1]);
+      }
+    }
+    // 3. Intento desesperado por si antes solo guardaban números
+    else {
+      aptId = Number(decodedText);
+    }
+    
+    if (isNaN(aptId) || aptId === 0) {
+      toast.error('El código QR escaneado no pertenece al sistema AppDrugs o está en formato irreconocible.');
       return;
     }
 
