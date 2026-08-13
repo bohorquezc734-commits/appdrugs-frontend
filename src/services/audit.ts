@@ -12,9 +12,18 @@ export interface AuditLog {
   timestamp: string;
 }
 
+export interface PaginatedResult<T> {
+  items: T[];
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
+}
+
 export const auditService = {
-  getAuditLogs: async (): Promise<AuditLog[]> => {
-    const response = await api.get<AuditLog[]>('/AuditLogs');
+  getAuditLogs: async (pageNumber: number = 1, pageSize: number = 10): Promise<PaginatedResult<AuditLog>> => {
+    const response = await api.get<PaginatedResult<AuditLog>>('/AuditLogs', {
+      params: { pageNumber, pageSize }
+    });
     return response.data;
   },
 };
