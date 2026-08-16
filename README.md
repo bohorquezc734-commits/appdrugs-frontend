@@ -1,88 +1,77 @@
-<<<<<<< HEAD
-# Getting Started with Create React App
+### 🎨 2. README para el Frontend (`appdrugs-frontend/README.md`)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+```markdown
+# 🏥 AppDrugs — Frontend Web Platform
 
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-=======
-# 🏥 AppDrugsV2 API
-
-API REST para gestión de medicamentos/farmacia construida con **.NET 8** siguiendo los principios de **Clean Architecture** y **CQRS**.
+Plataforma web SPA para la gestión de solicitudes, turnos y entrega de medicamentos en sedes farmacéuticas. Diseñada para ofrecer una experiencia fluida e intuitiva basada en **React 19**, **TypeScript** y **Tailwind CSS**.
 
 ---
 
-## 🛠️ Tecnologías
+## ⚡ Stack Tecnológico
 
-| Tecnología | Versión | Uso |
-|------------|---------|-----|
-| .NET | 8.0 | Framework base |
-| ASP.NET Core | 8.0 | Web API |
-| Entity Framework Core | 8.0 | ORM - Acceso a datos |
-| SQL Server | - | Base de datos |
-| MediatR | 12.0 | CQRS - Desacoplamiento de handlers |
-| FluentValidation | 11.0 | Validación de requests |
-| BCrypt.Net-Next | 4.2 | Hash de contraseñas |
-| JWT Bearer | 8.0 | Autenticación con tokens |
-| Serilog | 10.0 | Logging estructurado |
-| Swagger/OpenAPI | 6.5 | Documentación de API |
+- **Core:** React 19, TypeScript, React Router v7
+- **Estado Global:** Zustand
+- **Sincronización de Datos & Cache:** TanStack Query (React Query v5)
+- **Estilos & UI:** Tailwind CSS, Headless UI, React Icons, Lottie Animations
+- **Formularios:** React Hook Form + Validaciones
+- **Comunicación HTTP:** Axios con Interceptores para Auto-Refresh Token
+- **Tiempo Real:** SignalR (`@microsoft/signalr`)
+- **Herramientas de QR:** `html5-qrcode` (Lector vía cámara) y `react-qr-code` (Generador)
+- **Visualización:** Recharts (Gráficos interactivos)
 
 ---
 
-## 📦 Funcionalidades
+## 👥 Vistas y Roles del Sistema
 
-- ✅ Registro de usuarios con roles (Admin, Pharmacist, User)
-- ✅ Autenticación JWT (login con token)
-- ✅ CRUD de medicamentos
-- ✅ Control de stock y vencimientos
-- ✅ Búsqueda y filtros por categoría/receta
-- ✅ Paginación de resultados
-- ✅ Validaciones con FluentValidation
-- ✅ Documentación Swagger
+- 🔴 **Administrador:** Panel con 9 módulos completos (Overview con KPIs, Usuarios, Medicamentos, Sedes, Inventario Global, Turnos, Reportes PDF/Excel, Auditoría con Data Grid paginada y Configuración).
+- 🟡 **Farmacéutico:** Control de stock por sede, recepción de turnos, escáner de recetas y confirmación de entrega por código QR.
+- 🟢 **Paciente / Usuario:** Consulta de catálogo de medicamentos, creación de turnos con adjunto de recetas y seguimiento de estado en tiempo real.
+- 🤖 **Drugi (Asistente IA):** Chatbot integrado para consultas de stock, precios y estado de solicitudes en lenguaje natural.
 
 ---
 
-## 🏗️ Arquitectura
+## 📁 Estructura del Proyecto
 
-El proyecto sigue **Clean Architecture** con 4 capas:
->>>>>>> 3574b847b25fd57e2c479cc7f5cee8cf4921ace4
+```text
+src/
+├── components/         # Componentes UI organizados por rol (Admin, Pharmacist, User, Common)
+├── hooks/              # Hooks personalizados (Paginación, Auth, Debounce)
+├── pages/              # Páginas de autenticación y dashboards principales
+├── services/           # Cliente Axios, endpoints y servicios de API
+├── store/              # Stores globales con Zustand (Auth, UI)
+└── types/              # Definciones de interfaces y tipos en TypeScript
+🛠️ Instalación y Configuración Local
+Prerrequisitos
+Node.js (v18 o superior)
+
+npm / yarn / pnpm
+
+Pasos
+Clona el repositorio:
+
+Bash
+git clone [https://github.com/bohorquezc734-commits/appdrugs-frontend.git](https://github.com/bohorquezc734-commits/appdrugs-frontend.git)
+cd appdrugs-frontend
+Instala las dependencias:
+
+Bash
+npm install
+Crea un archivo .env.local en la raíz del proyecto:
+
+Fragmento de código
+PORT=3000
+HOST=0.0.0.0
+REACT_APP_API_URL=http://localhost:5071/api
+REACT_APP_PUBLIC_URL=http://localhost:3000
+Inicia el servidor de desarrollo:
+
+Bash
+npm start
+La aplicación se abrirá en http://localhost:3000.
+
+📦 Scripts Disponibles
+npm start: Inicia el entorno de desarrollo.
+
+npm run build: Compila la aplicación optimizada para producción en la carpeta build/.
+
+npm test: Ejecuta la suite de pruebas configurada.
