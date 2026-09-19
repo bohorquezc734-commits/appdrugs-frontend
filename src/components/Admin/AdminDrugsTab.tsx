@@ -39,7 +39,7 @@ const AdminDrugsTab: React.FC = () => {
     try {
       setLoadingDrugs(true);
       const data = await drugsService.getAll({ searchTerm: searchTerm || undefined, page, pageSize });
-      setDrugs(data.items);
+      setDrugs(Array.isArray((data as any)?.items) ? (data as any).items : ((data as any)?.items || (data as any)?.$values || (data as any)?.data || (data as any)?.results || []));
       setDrugCurrentPage(data.pageNumber);
       setTotalPages(data.totalPages);
     } catch {
@@ -207,7 +207,7 @@ const AdminDrugsTab: React.FC = () => {
       {/* Modal */}
       {showDrugModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setShowDrugModal(false)}></div>
+          <button type="button" aria-label="Cerrar modal" className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm w-full h-full cursor-default" onClick={() => setShowDrugModal(false)}></button>
           
           <div className="relative bg-white dark:bg-slate-800 rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden animate-fade-in-up">
             <div className="px-8 py-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 dark:bg-slate-800/50">
@@ -220,44 +220,44 @@ const AdminDrugsTab: React.FC = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-5">
               <div className="grid grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nombre Comercial</label>
-                  <input {...register('name', { required: 'Requerido' })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 transition-all text-slate-800 dark:text-slate-100" />
+                  <label htmlFor="input-name" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nombre Comercial</label>
+                  <input id="input-name" {...register('name', { required: 'Requerido' })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 transition-all text-slate-800 dark:text-slate-100" />
                   {errors.name && <p className="text-xs text-rose-500 mt-1 font-bold">{errors.name.message}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nombre Genérico</label>
-                  <input {...register('genericName', { required: 'Requerido' })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 transition-all text-slate-800 dark:text-slate-100" />
+                  <label htmlFor="input-genericName" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nombre Genérico</label>
+                  <input id="input-genericName" {...register('genericName', { required: 'Requerido' })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 transition-all text-slate-800 dark:text-slate-100" />
                   {errors.genericName && <p className="text-xs text-rose-500 mt-1 font-bold">{errors.genericName.message}</p>}
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Laboratorio</label>
-                  <input {...register('laboratory', { required: 'Requerido' })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 transition-all text-slate-800 dark:text-slate-100" />
+                  <label htmlFor="input-laboratory" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Laboratorio</label>
+                  <input id="input-laboratory" {...register('laboratory', { required: 'Requerido' })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 transition-all text-slate-800 dark:text-slate-100" />
                   {errors.laboratory && <p className="text-xs text-rose-500 mt-1 font-bold">{errors.laboratory.message}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Categoría</label>
-                  <input {...register('category', { required: 'Requerido' })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 transition-all text-slate-800 dark:text-slate-100" />
+                  <label htmlFor="input-category" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Categoría</label>
+                  <input id="input-category" {...register('category', { required: 'Requerido' })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 transition-all text-slate-800 dark:text-slate-100" />
                   {errors.category && <p className="text-xs text-rose-500 mt-1 font-bold">{errors.category.message}</p>}
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-5">
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Precio ($)</label>
-                  <input type="number" step="0.01" {...register('price', { required: 'Requerido', min: {value: 0.1, message: '> 0'} })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 font-bold text-emerald-700 dark:text-emerald-500 transition-all" />
+                  <label htmlFor="input-price" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Precio ($)</label>
+                  <input id="input-price" type="number" step="0.01" {...register('price', { required: 'Requerido', min: {value: 0.1, message: '> 0'} })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 font-bold text-emerald-700 dark:text-emerald-500 transition-all" />
                   {errors.price && <p className="text-xs text-rose-500 mt-1 font-bold">{errors.price.message}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Stock Inicial</label>
-                  <input type="number" {...register('stock', { required: 'Requerido', min: {value: 0, message: '>= 0'} })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 font-bold text-blue-700 dark:text-blue-500 transition-all" />
+                  <label htmlFor="input-stock" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Stock Inicial</label>
+                  <input id="input-stock" type="number" {...register('stock', { required: 'Requerido', min: {value: 0, message: '>= 0'} })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 font-bold text-blue-700 dark:text-blue-500 transition-all" />
                   {errors.stock && <p className="text-xs text-rose-500 mt-1 font-bold">{errors.stock.message}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Vencimiento</label>
-                  <input type="date" {...register('expirationDate', { required: 'Requerido' })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 transition-all text-slate-800 dark:text-slate-100 [color-scheme:light] dark:[color-scheme:dark]" />
+                  <label htmlFor="input-expirationDate" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Vencimiento</label>
+                  <input id="input-expirationDate" type="date" {...register('expirationDate', { required: 'Requerido' })} className="w-full bg-slate-50 dark:bg-slate-800 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-sm p-3 transition-all text-slate-800 dark:text-slate-100 [color-scheme:light] dark:[color-scheme:dark]" />
                   {errors.expirationDate && <p className="text-xs text-rose-500 mt-1 font-bold">{errors.expirationDate.message}</p>}
                 </div>
               </div>

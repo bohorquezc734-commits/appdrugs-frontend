@@ -11,7 +11,7 @@ const AdminUsersTab: React.FC = () => {
     try {
       setLoading(true);
       const data = await usersService.getAll();
-      setUsers(data);
+      setUsers(Array.isArray(data) ? data : ((data as any)?.items || (data as any)?.$values || (data as any)?.data || (data as any)?.results || []));
     } catch (err) {
       console.error('Error fetching users', err);
     } finally {
@@ -28,7 +28,9 @@ const AdminUsersTab: React.FC = () => {
       await usersService.changeRole(userId, newRole);
       setUsers(users.map(u => u.id === userId ? { ...u, role: newRole } : u));
       toast.success('Rol actualizado correctamente');
-    } catch (err) {
+    } catch (err: unknown) {
+      // Log for debugging; the UI still functions without the role change
+      console.error('Error al actualizar el rol:', err);
       toast.error('Error al actualizar el rol');
     }
   };
@@ -38,7 +40,9 @@ const AdminUsersTab: React.FC = () => {
       await usersService.toggleStatus(userId, !currentStatus);
       setUsers(users.map(u => u.id === userId ? { ...u, isActive: !currentStatus } : u));
       toast.success('Estado actualizado correctamente');
-    } catch (err) {
+    } catch (err: unknown) {
+      // Log for debugging; the UI still functions without the status change
+      console.error('Error al actualizar el estado:', err);
       toast.error('Error al actualizar el estado');
     }
   };
@@ -59,21 +63,22 @@ const AdminUsersTab: React.FC = () => {
     },
     {
       header: 'Rol',
-      render: (u) => (
-        <select
-          value={u.role}
-          onChange={(e) => handleRoleChange(u.id, e.target.value)}
-          className={`px-3 py-1 rounded-full text-xs font-bold border focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-colors cursor-pointer ${
-            u.role === 'Admin' ? 'bg-rose-50 text-rose-600 border-rose-200' :
-            u.role === 'Gestor' || u.role === 'Pharmacist' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
-            'bg-blue-50 text-blue-600 border-blue-200'
-          }`}
-        >
+      render: (u) => {
+        let roleClass = 'bg-blue-50 text-blue-600 border-blue-200';
+        if (u.role === 'Admin') roleClass = 'bg-rose-50 text-rose-600 border-rose-200';
+        else if (u.role === 'Gestor' || u.role === 'Pharmacist') roleClass = 'bg-emerald-50 text-emerald-600 border-emerald-200';
+        return (
+          <select
+            value={u.role}
+            onChange={(e) => handleRoleChange(u.id, e.target.value)}
+            className={`px-3 py-1 rounded-full text-xs font-bold border focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-colors cursor-pointer ${roleClass}`}
+          >
           <option value="User">Usuario</option>
           <option value="Pharmacist">Farmacéutico (Gestor)</option>
           <option value="Admin">Administrador</option>
-        </select>
-      ),
+          </select>
+        );
+      },
     },
     {
       header: 'Estado',

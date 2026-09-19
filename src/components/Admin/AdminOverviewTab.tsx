@@ -33,13 +33,17 @@ const AdminOverviewTab: React.FC<AdminOverviewTabProps> = ({ onNavigate }) => {
           inventoriesService.getAll()
         ]);
 
-        const lowStockCount = invRes.filter(i => i.quantity < 10).length;
+        const safeUsers = Array.isArray(usersRes) ? usersRes : ((usersRes as any)?.items || (usersRes as any)?.$values || (usersRes as any)?.data || (usersRes as any)?.results || []);
+        const safeSedes = Array.isArray(sedesRes) ? sedesRes : ((sedesRes as any)?.items || (sedesRes as any)?.$values || (sedesRes as any)?.data || (sedesRes as any)?.results || []);
+        const safeInv = Array.isArray(invRes) ? invRes : ((invRes as any)?.items || (invRes as any)?.$values || (invRes as any)?.data || (invRes as any)?.results || []);
+
+        const lowStockCount = safeInv.filter((i: any) => i.quantity < 10).length;
 
         setStats({
-          users: usersRes.length,
-          sedes: sedesRes.length,
-          drugs: drugsRes.totalCount || drugsRes.items?.length || 0,
-          appointments: aptsRes.totalCount || aptsRes.items?.length || 0,
+          users: (usersRes as any)?.totalCount || safeUsers.length || 0,
+          sedes: (sedesRes as any)?.totalCount || safeSedes.length || 0,
+          drugs: (drugsRes as any)?.totalCount || (drugsRes as any)?.items?.length || 0,
+          appointments: (aptsRes as any)?.totalCount || (aptsRes as any)?.items?.length || 0,
           lowStock: lowStockCount
         });
       } catch (err) {

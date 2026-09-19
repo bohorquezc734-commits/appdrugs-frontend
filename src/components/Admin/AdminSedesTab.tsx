@@ -25,7 +25,7 @@ const AdminSedesTab: React.FC = () => {
     try {
       setLoadingGestores(true);
       const data = await gestoresService.getAll();
-      setGestores(data);
+      setGestores(Array.isArray(data) ? data : ((data as any)?.items || (data as any)?.$values || (data as any)?.data || (data as any)?.results || []));
     } catch { 
       toast.error('Error cargando sedes'); 
     } finally { 

@@ -39,7 +39,7 @@ const AdminInventoryTab: React.FC = () => {
       setLoadingInventories(true);
       const params = invFilterSede > 0 ? { gestorFarmaceuticoId: invFilterSede } : undefined;
       const data = await inventoriesService.getAll(params);
-      setInventories(data);
+      setInventories(Array.isArray(data) ? data : ((data as any)?.items || (data as any)?.$values || (data as any)?.data || (data as any)?.results || []));
     } catch { 
       toast.error('Error cargando inventario'); 
     } finally { 
@@ -55,7 +55,7 @@ const AdminInventoryTab: React.FC = () => {
     loadInventories();
   }, [loadInventories]);
 
-  const handleCreateInventory = async (e: React.FormEvent) => {
+  const handleCreateInventory = async (e: React.BaseSyntheticEvent): Promise<void> => {
     e.preventDefault();
     if (invForm.drugId === 0 || invForm.gestorFarmaceuticoId === 0) {
       toast.warn('Selecciona una sede y un medicamento');
@@ -79,7 +79,7 @@ const AdminInventoryTab: React.FC = () => {
 
   const confirmStock = async () => {
     const q = Number(stockQty);
-    if (!stockQty || isNaN(q) || q <= 0) { toast.warn('Ingresa una cantidad válida'); return; }
+    if (!stockQty || Number.isNaN(q) || q <= 0) { toast.warn('Ingresa una cantidad válida'); return; }
     try {
       if (stockModal.type === 'add') {
         await inventoriesService.addStock(stockModal.invId, q);
@@ -129,15 +129,16 @@ const AdminInventoryTab: React.FC = () => {
     },
     {
       header: 'Cantidad',
-      render: (inv) => (
-        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
-          inv.quantity > 50 ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
-          inv.quantity > 10 ? 'bg-blue-50 text-blue-600 border-blue-200' :
-          'bg-rose-50 text-rose-600 border-rose-200'
-        }`}>
-          {inv.quantity} unid.
-        </span>
-      ),
+      render: (inv) => {
+        let badgeClass = 'bg-rose-50 text-rose-600 border-rose-200';
+        if (inv.quantity > 50) badgeClass = 'bg-emerald-50 text-emerald-600 border-emerald-200';
+        else if (inv.quantity > 10) badgeClass = 'bg-blue-50 text-blue-600 border-blue-200';
+        return (
+          <span className={`px-3 py-1 rounded-full text-xs font-bold border ${badgeClass}`}>
+            {inv.quantity} unid.
+          </span>
+        );
+      },
     },
     {
       header: 'Ajuste de Stock',
@@ -209,13 +210,13 @@ const AdminInventoryTab: React.FC = () => {
       {/* Modal de Creación */}
       {showCreateInvModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setShowCreateInvModal(false)}></div>
+          <button type="button" aria-label="Cerrar modal" className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm w-full h-full cursor-default" onClick={() => setShowCreateInvModal(false)}></button>
           
           <div className="relative bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md shadow-2xl overflow-hidden animate-fade-in-up">
             <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
               <h3 className="font-bold text-xl text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">📦</span>
-                Registrar Inventario
+                <span aria-hidden="true" className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">📦</span>
+                <span>Registrar Inventario</span>
               </h3>
               <button onClick={() => setShowCreateInvModal(false)} className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:bg-slate-700 rounded-full p-2 transition">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -224,10 +225,11 @@ const AdminInventoryTab: React.FC = () => {
             
             <form onSubmit={handleCreateInventory} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">Sede Farmacéutica</label>
-                <select 
-                  value={invForm.gestorFarmaceuticoId} 
-                  onChange={e => setInvForm({...invForm, gestorFarmaceuticoId: Number(e.target.value)})} 
+                <label htmlFor="inv-sede" className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">Sede Farmacéutica</label>
+                <select
+                  id="inv-sede"
+                  value={invForm.gestorFarmaceuticoId}
+                  onChange={e => setInvForm({...invForm, gestorFarmaceuticoId: Number(e.target.value)})}
                   className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 p-3 text-sm font-medium"
                   required
                 >
@@ -237,10 +239,11 @@ const AdminInventoryTab: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">Medicamento</label>
-                <select 
-                  value={invForm.drugId} 
-                  onChange={e => setInvForm({...invForm, drugId: Number(e.target.value)})} 
+                <label htmlFor="inv-drug" className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">Medicamento</label>
+                <select
+                  id="inv-drug"
+                  value={invForm.drugId}
+                  onChange={e => setInvForm({...invForm, drugId: Number(e.target.value)})}
                   className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 p-3 text-sm font-medium"
                   required
                 >
@@ -250,14 +253,15 @@ const AdminInventoryTab: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">Cantidad Inicial</label>
-                <input 
-                  type="number" 
-                  value={invForm.quantity} 
-                  onChange={e => setInvForm({...invForm, quantity: Number(e.target.value)})} 
-                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 p-3 text-sm font-bold text-blue-700" 
-                  required 
-                  min={0} 
+                <label htmlFor="inv-quantity" className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">Cantidad Inicial</label>
+                <input
+                  id="inv-quantity"
+                  type="number"
+                  value={invForm.quantity}
+                  onChange={e => setInvForm({...invForm, quantity: Number(e.target.value)})}
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 p-3 text-sm font-bold text-blue-700"
+                  required
+                  min={0}
                 />
               </div>
 
@@ -297,7 +301,6 @@ const AdminInventoryTab: React.FC = () => {
             onChange={e => setStockQty(e.target.value)}
             className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 p-3 text-lg font-bold text-slate-800 dark:text-slate-100 text-center"
             onKeyDown={e => e.key === 'Enter' && confirmStock()}
-            autoFocus
           />
         </div>
       </CustomDialog>
