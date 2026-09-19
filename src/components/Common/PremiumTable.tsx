@@ -31,6 +31,8 @@ export function PremiumTable<T>({
   totalPages,
   onPageChange
 }: PremiumTableProps<T>) {
+  const safeData = Array.isArray(data) ? data : [];
+
   return (
     <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden animate-fade-in-up">
       <div className="overflow-x-auto">
@@ -54,7 +56,7 @@ export function PremiumTable<T>({
                   </div>
                 </td>
               </tr>
-            ) : data.length === 0 ? (
+            ) : safeData.length === 0 ? (
               <tr>
                 <td colSpan={columns.length} className="px-6 py-16 text-center">
                   <div className="text-4xl mb-3 opacity-30 dark:opacity-20">📁</div>
@@ -62,7 +64,7 @@ export function PremiumTable<T>({
                 </td>
               </tr>
             ) : (
-              data.map((item) => (
+              safeData.map((item) => (
                 <tr 
                   key={keyExtractor(item)} 
                   onClick={() => onRowClick && onRowClick(item)}

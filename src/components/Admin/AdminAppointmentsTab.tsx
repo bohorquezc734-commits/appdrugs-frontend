@@ -26,8 +26,12 @@ const AdminAppointmentsTab: React.FC = () => {
     try {
       setLoadingAppointments(true);
       const data = await appointmentsService.getAll();
-      setAppointments(data.items);
-    } catch { toast.error('Error cargando turnos'); }
+      setAppointments(Array.isArray((data as any)?.items) ? (data as any).items : ((data as any)?.items || (data as any)?.$values || (data as any)?.data || (data as any)?.results || []));
+    } catch (err: unknown) {
+      // Non-critical load failure — toast is sufficient, no rethrow needed
+      toast.error('Error cargando turnos');
+      console.warn('loadAppointments failed:', err);
+    }
     finally { setLoadingAppointments(false); }
   }, []);
 
@@ -48,7 +52,9 @@ const AdminAppointmentsTab: React.FC = () => {
       showMessage(`¡Listo! El turno #${statusModal.aptId} ha sido actualizado correctamente. 👍`, 'feliz');
       setStatusModal(s => ({ ...s, open: false }));
       loadAppointments();
-    } catch (err: any) {
+    } catch (err: unknown) {
+      // Log the error for debugging while showing a user-friendly message
+      console.error('Error al actualizar estado del turno:', err);
       toast.error('Error al actualizar estado');
     }
   };

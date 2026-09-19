@@ -27,12 +27,76 @@ const AuditLogSkeleton = () => (
     <div className="h-10 bg-gray-200 rounded w-1/4"></div>
     <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
       <div className="h-12 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700"></div>
-      {[...Array(5)].map((_, i) => (
-        <div key={i} className="h-14 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-gray-700"></div>
+      {Array.from({ length: 5 }, () => crypto.randomUUID()).map((id) => (
+        <div key={id} className="h-14 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-gray-700"></div>
       ))}
     </div>
   </div>
 );
+
+const getActionClass = (action: string) => {
+  switch (action) {
+    case 'Added':
+      return 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800';
+    case 'Modified':
+      return 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800';
+    case 'Deleted':
+      return 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800';
+    default:
+      return 'bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700';
+  }
+};
+
+const formatValue = (value: any) => {
+  if (value === null || value === undefined || value === "") return 'Vacío';
+  if (typeof value === 'boolean') return value ? 'Sí' : 'No';
+  if (typeof value === 'object') return JSON.stringify(value);
+  return String(value);
+};
+
+const ChangesTable = ({ title, jsonString, titleColorClass, bgClass }: { title: string, jsonString: string, titleColorClass: string, bgClass: string }) => {
+  if (!jsonString) return null;
+  let parsed: Record<string, any> = {};
+  try {
+    parsed = JSON.parse(jsonString);
+  } catch {
+    return (
+      <div>
+        <h4 className={`text-xs font-bold uppercase tracking-wider mb-2 ${titleColorClass}`}>{title}</h4>
+        <pre className={`${bgClass} p-3 rounded-lg text-xs overflow-x-auto font-mono whitespace-pre-wrap`}>
+          {jsonString}
+        </pre>
+      </div>
+    );
+  }
+
+  const entries = Object.entries(parsed);
+  if (entries.length === 0) return null;
+
+  return (
+    <div>
+      <h4 className={`text-xs font-bold uppercase tracking-wider mb-2 ${titleColorClass}`}>{title}</h4>
+      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+        <table className="w-full text-left text-sm border-collapse">
+          <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+            <tr>
+              <th className="px-3 py-2 text-gray-600 dark:text-gray-300 font-medium border-r border-gray-200 dark:border-gray-700">Campo</th>
+              <th className="px-3 py-2 text-gray-600 dark:text-gray-300 font-medium">Valor</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white dark:bg-slate-900">
+            {entries.map(([key, value]) => (
+              <tr key={key} className="hover:bg-gray-50 dark:bg-gray-800 transition-colors border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+                <td className="px-3 py-2 font-mono text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 w-1/3 border-r border-gray-200 dark:border-gray-700">{key}</td>
+                <td className="px-3 py-2 text-gray-800 dark:text-gray-100 break-all">{formatValue(value)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
 
 const AuditLogsContent: React.FC = () => {
   // Pagination state
@@ -51,56 +115,8 @@ const AuditLogsContent: React.FC = () => {
   if (isLoading) return <AuditLogSkeleton />;
   if (error) throw error; // Caught by ErrorBoundary
 
-  const formatValue = (value: any) => {
-    if (value === null || value === undefined || value === "") return 'Vacío';
-    if (typeof value === 'boolean') return value ? 'Sí' : 'No';
-    if (typeof value === 'object') return JSON.stringify(value);
-    return String(value);
-  };
+  // formatValue and ChangesTable have been moved up outside the component.
 
-  const ChangesTable = ({ title, jsonString, titleColorClass, bgClass }: { title: string, jsonString: string, titleColorClass: string, bgClass: string }) => {
-    if (!jsonString) return null;
-    let parsed: Record<string, any> = {};
-    try {
-      parsed = JSON.parse(jsonString);
-    } catch {
-      return (
-        <div>
-          <h4 className={`text-xs font-bold uppercase tracking-wider mb-2 ${titleColorClass}`}>{title}</h4>
-          <pre className={`${bgClass} p-3 rounded-lg text-xs overflow-x-auto font-mono whitespace-pre-wrap`}>
-            {jsonString}
-          </pre>
-        </div>
-      );
-    }
-
-    const entries = Object.entries(parsed);
-    if (entries.length === 0) return null;
-
-    return (
-      <div>
-        <h4 className={`text-xs font-bold uppercase tracking-wider mb-2 ${titleColorClass}`}>{title}</h4>
-        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-          <table className="w-full text-left text-sm border-collapse">
-            <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-              <tr>
-                <th className="px-3 py-2 text-gray-600 dark:text-gray-300 font-medium border-r border-gray-200 dark:border-gray-700">Campo</th>
-                <th className="px-3 py-2 text-gray-600 dark:text-gray-300 font-medium">Valor</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white dark:bg-slate-900">
-              {entries.map(([key, value]) => (
-                <tr key={key} className="hover:bg-gray-50 dark:bg-gray-800 transition-colors border-b border-gray-200 dark:border-gray-700 last:border-b-0">
-                  <td className="px-3 py-2 font-mono text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 w-1/3 border-r border-gray-200 dark:border-gray-700">{key}</td>
-                  <td className="px-3 py-2 text-gray-800 dark:text-gray-100 break-all">{formatValue(value)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
-  };
 
   const formatPrimaryKey = (pk: string) => {
     try {
@@ -119,7 +135,7 @@ const AuditLogsContent: React.FC = () => {
   const totalRecords = data?.totalCount || 0;
   const totalPages = Math.ceil(totalRecords / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
-  const paginatedLogs = data?.items || [];
+  const paginatedLogs = Array.isArray((data as any)?.items) ? (data as any).items : ((data as any)?.items || (data as any)?.$values || (data as any)?.data || (data as any)?.results || []);
 
   const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setPageSize(Number(e.target.value));
@@ -184,12 +200,7 @@ const AuditLogsContent: React.FC = () => {
                       {log.userName || 'Sistema'}
                     </td>
                     <td className="px-4 py-3 border-r border-gray-200 dark:border-gray-700">
-                      <span className={`px-2.5 py-1 rounded-md text-xs font-medium border ${
-                        log.action === 'Added' ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800' :
-                        log.action === 'Modified' ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800' :
-                        log.action === 'Deleted' ? 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800' :
-                        'bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700'
-                      }`}>
+                      <span className={`px-2.5 py-1 rounded-md text-xs font-medium border ${getActionClass(log.action)}`}>
                         {translateAction(log.action)}
                       </span>
                     </td>
